@@ -1,12 +1,10 @@
 from getpass import getpass
 
-import tabulate
 import pyperclip
 from google.cloud import datastore
 
 from category_manager import add_account_to_category,remove_account_from_category
-from utils import check_account_exists
-from consts import ACCOUNT_PROPERTIES, ACCOUNTS_ORDER
+from utils import check_account_exists,visualize_accounts
 
 
 def add_account(app):
@@ -62,12 +60,12 @@ def view_account(app, command):
 
 def view_all_accounts(app):
     query = app.client.query(kind='Account')
-    visualize_accounts(list(query.fetch()))
+    visualize_accounts(app.user['username'],list(query.fetch()))
 
 
 def view_account_by_account_name(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
-    visualize_accounts([account])
+    visualize_accounts(app.user['username'],[account])
     app.last_account = account
 
 
@@ -84,12 +82,6 @@ def populate_account_info():
     # TODO add encryption of pwd
     account_info['pwd_length'] = len(account_info['password'])
     return account_info
-
-
-def drop_sensitive_info(account):
-    account['password'] = '*' * account['pwd_length']
-    del account['pwd_length']
-    return account
 
 
 def visualize_password(app, account_name):
@@ -112,13 +104,3 @@ def retrieve_account_by_account_name(app, account_name):
         raise ValueError(f'Account with account name {account_name} was not found.')
     return accounts[0]
 
-
-def visualize_accounts(accounts):
-    if not accounts:
-        print('No account were found.')
-        return
-    order = ACCOUNTS_ORDER.copy()
-    order.update(accounts[0])
-    accounts[0] = order
-    rows = [drop_sensitive_info(dict(account)) for account in accounts]
-    print(tabulate.tabulate(rows, ACCOUNT_PROPERTIES))

@@ -1,4 +1,4 @@
-from utils import check_category_exists
+from utils import check_category_exists,visualize_accounts
 from google.cloud import datastore
 
 
@@ -29,21 +29,40 @@ def remove_account_from_category(app, category_name, account_key):
     category.update(category_info)
     app.client.put(category)
 
-def delete_category(app,category_name):
+
+def delete_category(app, category_name):
     categories = check_category_exists(app.client, category_name, app.user)
     if not categories:
         raise ValueError(f'Category with category name {category_name} was not found.')
     category = categories[0]
-    category_info = dict(category)
-    if category_info['accounts']:
-        answer = input('There are accounts who are part of this category. Are you sure that you want to delete the category?[yes/no]')
-        if answer.upper() == 'YES':
-            remove_all_accounts_from_category()
+    if category['accounts']:
+        answer = input(
+            'There are accounts who are part of this category. Are you sure that you want to delete the category?[yes/no]')
+        if answer.upper() != 'YES':
+            print('The category was not removed.')
             return
-        elif answer.upper() !='NO':
-            print('Invalid answer.')
+        remove_all_accounts_from_category(app, category)
     app.client.delete(category.key)
     print(f'Category with category name {category["category_name"]} was successfully removed.')
 
-def remove_all_accounts_from_category():
-    pass
+
+def remove_all_accounts_from_category(app, category):
+    for account_key in category['accounts']:
+        remove_account_from_category(app, category['category_name'], account_key)
+        account = app.client.get(account_key)
+        account['category'] = ''
+        app.client.put(account)
+
+
+def view_all_accounts_by_category(app,category_name):
+    categories= check_category_exists(app.client, category_name, app.user)
+    if not categories:
+        raise ValueError(f'Category with category name {category_name} was not found.')
+    category = categories[0]
+    print(f'Category {category_name}: ')
+    accounts=[]
+    for account_key in category['accounts']:
+        accounts.append(app.client.get(account_key))
+    visualize_accounts(app.user['username'],accounts)
+
+

@@ -4,13 +4,16 @@ from consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE
 from account_manager import add_account, edit_account, delete_account, view_account, copy_password, visualize_password
 from os import system, name
 
+from category_manager import delete_category, view_all_accounts_by_category
+
+
 def console():
     app = App()
 
     key = app.client.key('User', 5632499082330112)
     app.user = app.client.get(key)
     print('Please enter "help" in order to get information about the commands.')
-    input_message=LOGIN_OR_SIGNUP_MESSAGE
+    input_message = LOGIN_OR_SIGNUP_MESSAGE
     command = None
     while command != 'STOP':
         input_string = input(input_message)
@@ -19,7 +22,7 @@ def console():
         print(commands)
         command = commands[0]
         if command not in COMMANDS:
-            print('Invalid command. '+HELP_MESSAGE)
+            print('Invalid command. ' + HELP_MESSAGE)
             continue
         if command == 'CLEAR':
             clear()
@@ -28,7 +31,7 @@ def console():
             visualize_help()
             continue
         if not app.user:
-            input_message= login_or_signup(commands, app)
+            input_message = login_or_signup(commands, app)
             continue
         handle_user_commands(commands, app)
 
@@ -41,31 +44,41 @@ def login_or_signup(commands, app):
     return 'Please enter "login" or "signup" in order to login/signup or enter "help" in order to get information about the commands.'
 
 
+def handle_category_commands(commands, app):
+    if len(commands)<2:
+        raise ValueError('Not enough arguments. ' + HELP_MESSAGE)
+    if commands[0] == '-ALL':
+        view_all_accounts_by_category(app,commands[1])
+    if commands[0] == '-RM':
+        delete_category(app,commands[1])
+
+
 def handle_user_commands(commands, app):
     if commands[0] == 'ACCOUNT':
         return handle_account_commands(commands[1:], app)
     if commands[0] == 'ORG':
-        handle_org_commands(commands[1:], app)
+        return handle_org_commands(commands[1:], app)
+    if commands[0] == 'CATEGORY':
+        return handle_category_commands(commands[1:], app)
 
 
 def handle_account_commands(commands, app):
     if commands[0] == 'ADD':
         return add_account(app)
     if len(commands) < 2:
-        raise ValueError('Not enough arguments. '+HELP_MESSAGE)
+        raise ValueError('Not enough arguments. ' + HELP_MESSAGE)
     if commands[0] == 'EDIT':
-        return edit_account(app,commands[1])
+        return edit_account(app, commands[1])
     if commands[0] == 'DELETE':
-        return delete_account(app,commands[1])
+        return delete_account(app, commands[1])
     if commands[1] == '-last':
         commands[1] = app.last_account['account_name']
     if commands[0] == 'VIEW':
-        return view_account(app,commands[1])
+        return view_account(app, commands[1])
     if commands[0] == 'COPY-PWD':
-        return copy_password(app,commands[1])
+        return copy_password(app, commands[1])
     if commands[0] == 'PWD':
-        return visualize_password(app,commands[1])
-
+        return visualize_password(app, commands[1])
 
 
 def handle_org_commands(commands, app):
@@ -75,6 +88,7 @@ def handle_org_commands(commands, app):
 def visualize_help():
     print('help')
 
+
 def clear():
     # for windows
     if name == 'nt':
@@ -82,6 +96,7 @@ def clear():
     # for mac and linux(here, os.name is 'posix')
     else:
         _ = system('clear')
+
 
 if __name__ == '__main__':
     console()
