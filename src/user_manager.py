@@ -1,32 +1,41 @@
 import getpass
 import os
+import time
 from google.cloud import datastore
+
+from consts import LOGIN_OR_SIGNUP_MESSAGE
 from utils import check_user_exists
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]='E:/Hobbies/coding/personal_projects/password_function/credentials.json'
 
-client = datastore.Client()
 
-def signup():
+def signup(app):
     user_info = {}
     user_info['username'] = input('username: ')
     user_info['email'] = input('email: ')
     user_info['password'] = getpass.getpass()
-    if check_user_exists(client,user_info['username']):
+    if check_user_exists(app.client,user_info['username']):
         raise ValueError(f'User with username {user_info["username"]} already exists.')
-    user = datastore.Entity(client.key('User'))
+    user = datastore.Entity(app.client.key('User'))
     user.update(user_info)
-    client.put(user)
+    app.client.put(user)
+    return LOGIN_OR_SIGNUP_MESSAGE
 
-def login():
+def login(app):
     username = input('username: ')
-    users = check_user_exists(client,username)
+    users = check_user_exists(app.client,username)
     if not users:
         raise ValueError(f'User with username {username} does not exist.')
     user = users[0]
-    for _ in range(3):
+    for i in range(3):
         password = getpass.getpass()
         if password == user['password']:
-            user = user
+            app.user = user
+            print('You have successfully logged in.')
+            print(f'Hi {username}, I am your password manager.')
+            return ''
+        print(f'Wrong password. You have {2-i} more tries.')
+    print('You have to wait 30 sec before continuing.')
+    time.sleep(30)
+    return LOGIN_OR_SIGNUP_MESSAGE
 
 
 # def enter_username():
