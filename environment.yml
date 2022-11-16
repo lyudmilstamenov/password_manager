@@ -1,0 +1,6 @@
+name: pmenv
+dependencies:
+  - python=3.9
+  - pip
+  - pip:
+    - google-cloud-datastore
