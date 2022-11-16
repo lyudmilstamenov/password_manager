@@ -1,6 +1,11 @@
 name: pmenv
+#channels:
+#- defaults
+#- conda-forge
 dependencies:
   - python=3.9
+  - tabulate
   - pip
   - pip:
     - google-cloud-datastore
+    - pyperclip

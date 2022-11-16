@@ -1,11 +1,8 @@
 import user_manager
 from app import App
 from consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE
-from account_manager import add_account, edit_account, delete_account, view_account
-
-
-# def __int__(self):
-#     self.
+from account_manager import add_account, edit_account, delete_account, view_account, copy_password, visualize_password
+from os import system, name
 
 def console():
     app = App()
@@ -23,6 +20,9 @@ def console():
         command = commands[0]
         if command not in COMMANDS:
             print('Invalid command. '+HELP_MESSAGE)
+            continue
+        if command == 'CLEAR':
+            clear()
             continue
         if command == 'HELP':
             visualize_help()
@@ -57,8 +57,14 @@ def handle_account_commands(commands, app):
         return edit_account(app,commands[1])
     if commands[0] == 'DELETE':
         return delete_account(app,commands[1])
+    if commands[1] == '-last':
+        commands[1] = app.last_account['account_name']
     if commands[0] == 'VIEW':
         return view_account(app,commands[1])
+    if commands[0] == 'COPY-PWD':
+        return copy_password(app,commands[1])
+    if commands[0] == 'PWD':
+        return visualize_password(app,commands[1])
 
 
 
@@ -69,6 +75,13 @@ def handle_org_commands(commands, app):
 def visualize_help():
     print('help')
 
+def clear():
+    # for windows
+    if name == 'nt':
+        _ = system('cls')
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = system('clear')
 
 if __name__ == '__main__':
     console()
