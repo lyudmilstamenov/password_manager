@@ -4,7 +4,7 @@ from consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, HELP_INFO
 from account_manager import add_account, edit_account, delete_account, view_account, copy_password, visualize_password
 from os import system, name
 
-from category_manager import delete_category, view_all_accounts_by_category
+from category_manager import delete_category, view_all_accounts_by_category, view_all_categories
 
 
 def console():
@@ -33,8 +33,11 @@ def console():
         if not app.user:
             input_message = login_or_signup(commands, app)
             continue
-        handle_user_commands(commands, app)
-
+        try:
+            handle_user_commands(commands, app)
+        except ValueError as exc:
+            print(exc)
+            print(HELP_MESSAGE)
 
 def login_or_signup(commands, app):
     if commands[0] == 'LOGIN':
@@ -45,10 +48,10 @@ def login_or_signup(commands, app):
 
 
 def handle_category_commands(commands, app):
+    if commands[0] == '-ALL':
+        return view_all_categories(app)
     if len(commands)<2:
         raise ValueError('Not enough arguments. ' + HELP_MESSAGE)
-    if commands[0] == '-ALL':
-        view_all_accounts_by_category(app,commands[1])
     if commands[0] == '-RM':
         delete_category(app,commands[1])
 
@@ -67,6 +70,8 @@ def handle_account_commands(commands, app):
         return add_account(app)
     if len(commands) < 2:
         raise ValueError('Not enough arguments. ' + HELP_MESSAGE)
+    if commands[0] == 'CAT':
+        return view_all_accounts_by_category(app,commands[1])
     if commands[0] == 'EDIT':
         return edit_account(app, commands[1])
     if commands[0] == '-RM':

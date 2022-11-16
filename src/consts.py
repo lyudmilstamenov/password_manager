@@ -19,8 +19,11 @@ HELP_INFO = {
     'help': 'This command prints out this information.',
     'stop': 'This command stops the execution of the problem.',
     'clear': 'This command clears the console.',
+    'login':'This command shows the login prompt.',
+    '':'',
     'account add': '',
-    'account edit <account_name>': 'This command updates the information of the account.',
+    'account edit <account_name>': 'This command updates the information of the account. When editing a field, '
+                                   'set it to "-del" in order to make it empty.',
     'account -rm <account_name>': 'This command deletes the account.',
     'account view -all': 'This command shows the non-sensitive infomation of all accounts who are owned by the '
                          'current user.',
@@ -29,8 +32,8 @@ HELP_INFO = {
     'account pwd <account_name>': 'This command shows the password of the account on the console. ' + CLEAR_MESSAGE,
     'category -all <category_name>': 'This command shows the non-sensitive infomation of all accounts who are owned '
                                      'by the current user and are from this category.',
-    'category -rm <category_name': 'This command deletes the cattegory and for every account from the category the '
+    'category -rm <category_name': 'This command deletes the category and for every account from the category the '
                                    'category property is set to empty.',
-    'shortcut info': 'If you use "-last" insted of <account_name> the programme will use the most recently used '
+    'shortcut info': 'If you use "-last" instead of <account_name> the programme will use the most recently used '
                      'account if this is not the first operation with accounts for the session. '
 }
