@@ -1,6 +1,6 @@
 import user_manager
 from app import App
-from consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE
+from consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, HELP_INFO
 from account_manager import add_account, edit_account, delete_account, view_account, copy_password, visualize_password
 from os import system, name
 
@@ -69,7 +69,7 @@ def handle_account_commands(commands, app):
         raise ValueError('Not enough arguments. ' + HELP_MESSAGE)
     if commands[0] == 'EDIT':
         return edit_account(app, commands[1])
-    if commands[0] == 'DELETE':
+    if commands[0] == '-RM':
         return delete_account(app, commands[1])
     if commands[1] == '-last':
         commands[1] = app.last_account['account_name']
@@ -86,7 +86,7 @@ def handle_org_commands(commands, app):
 
 
 def visualize_help():
-    print('help')
+    print(HELP_INFO)
 
 
 def clear():
