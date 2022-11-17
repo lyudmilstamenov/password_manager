@@ -16,5 +16,5 @@ dependencies:
     - google-cloud-datastore
     - pyperclip
     - password-strength
-    - scrypt
+#    - scrypt
 #    - pysodium

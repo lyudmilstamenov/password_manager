@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
 BASE_COMMANDS = ['HELP', 'EXIT', 'STOP', 'CLEAR']
-LOGIN_OR_SIGNUP = ['LOGIN', 'SIGNUP']
+LOGIN_OR_SIGNUP = ['LOGIN', 'SIGNUP', 'LOGOUT']
 USER_COMMANDS = ['ACCOUNT', 'ORG', 'CATEGORY']
 COMMANDS = BASE_COMMANDS + LOGIN_OR_SIGNUP + USER_COMMANDS
 NOT_ENOUGH_ARGUMENTS_MESSAGE = 'The command arguments are not enough or are invalid.'
@@ -27,10 +27,10 @@ CLEAR_MESSAGE = 'Please enter "clear" after that in order the password to be rem
 
 ACCOUNT_EXISTS_MESSAGE = 'Account with account name {} already exists.'
 
-STRING_PROPERTY_VALIDATION_ERROR_MESSAGE =  'Invalid value. The {} can contains only ' \
-                       'letters, digits and ._-. Enter a valid value or ' \
-                       'enter "exit" to quit the current state of the ' \
-                       'programme. '
+STRING_PROPERTY_VALIDATION_ERROR_MESSAGE = 'Invalid value. The {} can contains only ' \
+                                           'letters, digits and ._-. Enter a valid value or ' \
+                                           'enter "exit" to quit the current state of the ' \
+                                           'programme. '
 
 EMAIL_VALIDATION_ERROR_MESSAGE = 'Invalid email. Enter a valid value or ' \
                                  'enter "exit" to quit the current state of the ' \

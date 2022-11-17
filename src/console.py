@@ -32,6 +32,10 @@ def console():
         if command == 'HELP':
             visualize_help()
             continue
+        if command == 'LOGOUT':
+            app.user = None
+            app.last_account = None
+            continue
         if not app.user:
             input_message = login_or_signup(commands, app)
             continue
@@ -87,8 +91,10 @@ def handle_account_commands(commands, app):
         return edit_account(app, commands[1])
     if commands[0] == '-RM':
         return delete_account(app, commands[1])
-    if commands[1] == '-last':
+    if commands[1] == '-last' and app.last_account:
         commands[1] = app.last_account['account_name']
+    elif not app.last_account:
+        raise ValueError('No account was used recently.')
     if commands[0] == 'VIEW':
         return view_account(app, commands[1])
     if commands[0] == 'COPY-PWD':

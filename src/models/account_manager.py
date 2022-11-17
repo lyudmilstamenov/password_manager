@@ -12,10 +12,14 @@ from validation import validate_string_property, validate_email, validate_url, v
 from validation import validate_entity_name
 
 from common.consts import ACCOUNT_EXISTS_MESSAGE
+from cryptography import encrypt, decrypt
+
+from database.datastore_manager import retrieve_all_accounts_by_user
 
 
 def add_account(app):
     account_info = populate_account_info(app)
+    account_info['password'] = encrypt(account_info['password'], app.user['password'])
     account_info['owner'] = app.user.key
     if check_account_exists(app.client, account_info['account_name'], app.user):
         raise ValueError(ACCOUNT_EXISTS_MESSAGE.format(account_info["account_name"]))
@@ -45,6 +49,8 @@ def edit_account(app, account_name):
     new_account_info = populate_account_info(app, True)
     if new_account_info['category']:
         update_category(app, account_info['category'], new_account_info['category'], account.key)
+    if new_account_info['password']:
+        new_account_info['password'] = encrypt(new_account_info['password'], app.user['password'])
     for key, value in new_account_info.items():
         if value:
             account_info[key] = value
@@ -72,8 +78,8 @@ def view_account(app, command):
 
 
 def view_all_accounts(app):
-    query = app.client.query(kind='Account')
-    visualize_accounts(app.user['username'], list(query.fetch()))
+    accounts = retrieve_all_accounts_by_user(app.client, app.user)
+    visualize_accounts(app.user['username'], accounts)
     app.last_account = None
     return 'msg'
 
@@ -98,14 +104,13 @@ def populate_account_info(app, can_be_empty=False):
         'email': validate_email(input('email: '), can_be_empty),
         'notes': input('notes: '),
         'password': validate_password(getpass('password: '))}
-    # TODO add encryption of pwd
     account_info['pwd_length'] = len(account_info['password'])
     return account_info
 
 
 def visualize_password(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
-    password = account['password']  # decrypt
+    password = decrypt(account['password'], app.user['password'])  # decrypt
     print(f'Your password is {password}.')
     app.last_account = account
 
@@ -113,7 +118,7 @@ def visualize_password(app, account_name):
 def copy_password(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
     password = account['password']  # decrypt
-    pyperclip.copy(password)
+    pyperclip.copy(decrypt(password, app.user['password']))
     print('The password was successfully copied to your clipboard.')
     app.last_account = account
 

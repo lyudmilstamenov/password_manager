@@ -12,6 +12,7 @@ def check_category_exists(client, category_name, user):
 def retrieve_all_categories_by_user(client, user):
     return create_query(client,'Category',{'owner':user.key})
 
-
+def retrieve_all_accounts_by_user(client, user):
+    return create_query(client, 'Account', {'owner':user.key})
 def check_account_exists(client, account_name, user):
     return create_query(client,'Account',{'owner':user.key,'account_name':account_name})
