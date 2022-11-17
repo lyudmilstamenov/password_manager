@@ -7,8 +7,14 @@ dependencies:
   - tabulate
   - validators
   - pylint
+  - pynacl
+  - bcrypt
+  - pycryptodome
+#  - libsodium
   - pip
   - pip:
     - google-cloud-datastore
     - pyperclip
     - password-strength
+    - scrypt
+#    - pysodium

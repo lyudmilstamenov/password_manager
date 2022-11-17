@@ -2,10 +2,12 @@ from models import user_manager
 from app import App
 from common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, HELP_INFO, NOT_ENOUGH_ARGUMENTS_MESSAGE, \
     INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE
-from models.account_manager import add_account, edit_account, delete_account, view_account, copy_password, visualize_password
+from models.account_manager import add_account, edit_account, delete_account, view_account, copy_password, \
+    visualize_password
 from os import system, name
 
 from models.category_manager import delete_category, view_all_accounts_by_category, view_all_categories
+from common.erros import StopError, QuitError
 
 
 def console():
@@ -37,6 +39,12 @@ def console():
             handle_user_commands(commands, app)
         except ValueError as exc:
             print(exc)
+            print(HELP_MESSAGE)
+        except StopError:
+            print('The programme stops.')
+            break
+        except QuitError as exc:
+            print('You are quiting the current state of the programme. ' + exc)
             print(HELP_MESSAGE)
 
 

@@ -5,13 +5,16 @@ from google.cloud import datastore
 from common.consts import LOGIN_OR_SIGNUP_MESSAGE
 from database.datastore_manager import check_user_exists
 from database.base import save_entity
-from validation import validate_property, validate_email, validate_password,validate_entity_name
+from validation import validate_property, validate_email, validate_password, validate_entity_name
+
+from cryptography import get_hashed_password, check_password
 
 
 def signup(app):
     user_info = {'username': validate_entity_name(input('username: '), 'User', 'username',
                                                   lambda value: check_user_exists(app.client, value)),
                  'email': validate_email(input('email: ')), 'password': validate_password(getpass.getpass())}
+    user_info['password'] = get_hashed_password(user_info['password'])
     if check_user_exists(app.client, user_info['username']):
         raise ValueError(f'User with username {user_info["username"]} already exists.')
     user = datastore.Entity(app.client.key('User'))
@@ -27,8 +30,9 @@ def login(app):
     user = users[0]
     for i in range(3):
         password = getpass.getpass()
-        if password == user['password']:
+        if check_password(password, user['password']):
             app.user = user
+            app.user['password'] = password
             print('You have successfully logged in.')
             print(f'Hi {username}, I am your password manager.')
             return ''

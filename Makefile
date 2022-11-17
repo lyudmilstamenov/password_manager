@@ -9,7 +9,7 @@ run:
 
 .PHONY: run-v
 run-v:
-	conda activate pmenv && python src/validation.py
+	conda activate pmenv && python src/cryptography.py
 
 .PHONY: lint
 lint:

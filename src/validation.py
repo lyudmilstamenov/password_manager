@@ -87,7 +87,3 @@ def validate_entity_name(property_value, kind_name, property_name, check_entity_
         return validate_entity_name(property_value, kind_name, property_name, check_entity_exists, can_be_empty,
                                     number_of_tries + 1)
     return property_value
-
-
-if __name__ == '__main__':
-    print(validate_password('as.asg'))
