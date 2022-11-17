@@ -6,3 +6,11 @@ set-venv:
 .PHONY: run
 run:
 	conda activate pmenv && python src/console.py
+
+.PHONY: run-v
+run-v:
+	conda activate pmenv && python src/validation.py
+
+.PHONY: lint
+lint:
+	conda activate pmenv && pylint src/

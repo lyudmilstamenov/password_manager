@@ -29,6 +29,3 @@ class App:
     @last_account.setter
     def last_account(self, last_account):
         self.__last_account = last_account
-
-
-

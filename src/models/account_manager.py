@@ -3,18 +3,24 @@ from getpass import getpass
 import pyperclip
 from google.cloud import datastore
 
-from category_manager import add_account_to_category, remove_account_from_category
-from utils import check_account_exists, visualize_accounts
+from models.category_manager import add_account_to_category, remove_account_from_category
+from common.utils import visualize_accounts
+from database.datastore_manager import check_account_exists
+from database.base import save_entity
+from validation import validate_string_property, validate_email, validate_url, validate_password
+
+from validation import validate_entity_name
+
+from common.consts import ACCOUNT_EXISTS_MESSAGE
 
 
 def add_account(app):
-    account_info = populate_account_info()
+    account_info = populate_account_info(app)
     account_info['owner'] = app.user.key
     if check_account_exists(app.client, account_info['account_name'], app.user):
-        raise ValueError(f'Account with account name {account_info["account_name"]} already exists.')
+        raise ValueError(ACCOUNT_EXISTS_MESSAGE.format(account_info["account_name"]))
     account = datastore.Entity(app.client.key('Account'))
-    account.update(account_info)
-    app.client.put(account)
+    save_entity(app.client, account, account_info)
     add_account_to_category(app, account_info['category'], account.key)
     print(f'Account with {account_info["account_name"]} was successfully created.')
     app.last_account = account
@@ -36,7 +42,7 @@ def edit_account(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
     account_info = dict(account)
     print('In order not to change the following property click "enter"')
-    new_account_info = populate_account_info()
+    new_account_info = populate_account_info(app, True)
     if new_account_info['category']:
         update_category(app, account_info['category'], new_account_info['category'], account.key)
     for key, value in new_account_info.items():
@@ -46,8 +52,7 @@ def edit_account(app, account_name):
         if value == '-del':
             account[key] = ''
 
-    account.update(account_info)
-    app.client.put(account)
+    save_entity(app.client, account, account_info)
     print(f'Account with {account_info["account_name"]} was successfully updated.')
     app.last_account = account
     return
@@ -63,30 +68,36 @@ def delete_account(app, account_name):
 def view_account(app, command):
     if command == '-all':
         return view_all_accounts(app)
-    view_account_by_account_name(app, command)
+    return view_account_by_account_name(app, command)
 
 
 def view_all_accounts(app):
     query = app.client.query(kind='Account')
     visualize_accounts(app.user['username'], list(query.fetch()))
+    app.last_account = None
+    return 'msg'
 
 
 def view_account_by_account_name(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
     visualize_accounts(app.user['username'], [account])
     app.last_account = account
+    return 'msg'
 
 
-def populate_account_info():
-    account_info = {}
-    account_info['account_name'] = input('account name (This name must be unique per account.): ')
-    account_info['app_name'] = input('app name []: ')
-    account_info['login_url'] = input('login url []: ')
-    account_info['category'] = input('category []: ')
-    account_info['username'] = input('username: ')
-    account_info['email'] = input('email: ')
-    account_info['notes'] = input('notes: ')
-    account_info['password'] = getpass('password: ')
+def populate_account_info(app, can_be_empty=False):
+    account_info = {
+        'account_name': validate_entity_name(input('account name (This name must be unique per account.): '), 'Account',
+                                             'account name',
+                                             lambda value: check_account_exists(app.client, value, app.user),
+                                             can_be_empty),
+        'app_name': validate_string_property(input('app name []: '), 'app name', True),
+        'login_url': validate_url(input('login url []: ')),
+        'category': validate_string_property(input('category []: '), 'category', True),
+        'username': validate_string_property(input('username: '), 'username', can_be_empty),
+        'email': validate_email(input('email: '), can_be_empty),
+        'notes': input('notes: '),
+        'password': validate_password(getpass('password: '))}
     # TODO add encryption of pwd
     account_info['pwd_length'] = len(account_info['password'])
     return account_info

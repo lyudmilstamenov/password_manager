@@ -1,15 +1,15 @@
-import user_manager
+from models import user_manager
 from app import App
-from consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, HELP_INFO
-from account_manager import add_account, edit_account, delete_account, view_account, copy_password, visualize_password
+from common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, HELP_INFO, NOT_ENOUGH_ARGUMENTS_MESSAGE, \
+    INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE
+from models.account_manager import add_account, edit_account, delete_account, view_account, copy_password, visualize_password
 from os import system, name
 
-from category_manager import delete_category, view_all_accounts_by_category, view_all_categories
+from models.category_manager import delete_category, view_all_accounts_by_category, view_all_categories
 
 
 def console():
     app = App()
-
     key = app.client.key('User', 5632499082330112)
     app.user = app.client.get(key)
     print('Please enter "help" in order to get information about the commands.')
@@ -22,7 +22,7 @@ def console():
         print(commands)
         command = commands[0]
         if command not in COMMANDS:
-            print('Invalid command. ' + HELP_MESSAGE)
+            print(INVALID_COMMAND_MESSAGE + HELP_MESSAGE)
             continue
         if command == 'CLEAR':
             clear()
@@ -39,6 +39,7 @@ def console():
             print(exc)
             print(HELP_MESSAGE)
 
+
 def login_or_signup(commands, app):
     if commands[0] == 'LOGIN':
         return user_manager.login(app)
@@ -50,10 +51,11 @@ def login_or_signup(commands, app):
 def handle_category_commands(commands, app):
     if commands[0] == '-ALL':
         return view_all_categories(app)
-    if len(commands)<2:
-        raise ValueError('Not enough arguments. ' + HELP_MESSAGE)
+    if len(commands) < 2:
+        raise ValueError(NOT_ENOUGH_ARGUMENTS_MESSAGE)
     if commands[0] == '-RM':
-        delete_category(app,commands[1])
+        return delete_category(app, commands[1])
+    raise ValueError(INVALID_ARGUMENTS_MESSAGE)
 
 
 def handle_user_commands(commands, app):
@@ -63,15 +65,16 @@ def handle_user_commands(commands, app):
         return handle_org_commands(commands[1:], app)
     if commands[0] == 'CATEGORY':
         return handle_category_commands(commands[1:], app)
+    raise ValueError(INVALID_COMMAND_MESSAGE)
 
 
 def handle_account_commands(commands, app):
     if commands[0] == 'ADD':
         return add_account(app)
     if len(commands) < 2:
-        raise ValueError('Not enough arguments. ' + HELP_MESSAGE)
+        raise ValueError(NOT_ENOUGH_ARGUMENTS_MESSAGE)
     if commands[0] == 'CAT':
-        return view_all_accounts_by_category(app,commands[1])
+        return view_all_accounts_by_category(app, commands[1])
     if commands[0] == 'EDIT':
         return edit_account(app, commands[1])
     if commands[0] == '-RM':
@@ -84,6 +87,7 @@ def handle_account_commands(commands, app):
         return copy_password(app, commands[1])
     if commands[0] == 'PWD':
         return visualize_password(app, commands[1])
+    raise ValueError(INVALID_ARGUMENTS_MESSAGE)
 
 
 def handle_org_commands(commands, app):

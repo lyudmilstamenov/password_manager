@@ -5,7 +5,10 @@ name: pmenv
 dependencies:
   - python=3.9
   - tabulate
+  - validators
+  - pylint
   - pip
   - pip:
     - google-cloud-datastore
     - pyperclip
+    - password-strength

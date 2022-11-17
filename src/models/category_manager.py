@@ -1,5 +1,8 @@
-from utils import check_category_exists, visualize_accounts, retrieve_all_categories_by_user, visualize_categories
 from google.cloud import datastore
+
+from common.utils import visualize_accounts, visualize_categories
+from database.datastore_manager import retrieve_all_categories_by_user, check_category_exists
+from database.base import save_entity
 
 
 def add_account_to_category(app, category_name, account_key):
@@ -14,8 +17,8 @@ def add_account_to_category(app, category_name, account_key):
         category = categories[0]
         category_info = dict(category)
         category_info['accounts'] += [account_key]
-    category.update(category_info)
-    app.client.put(category)
+
+    save_entity(app.client, category, category_info)
 
 
 def remove_account_from_category(app, category_name, account_key):
@@ -26,8 +29,8 @@ def remove_account_from_category(app, category_name, account_key):
     category_info = dict(category)
     if account_key in category_info['accounts']:
         category_info['accounts'].remove(account_key)
-    category.update(category_info)
-    app.client.put(category)
+
+    save_entity(app.client, category, category_info)
 
 
 def delete_category(app, category_name):
@@ -69,4 +72,24 @@ def view_all_accounts_by_category(app, category_name):
 
 def view_all_categories(app):
     categories = retrieve_all_categories_by_user(app.client, app.user)
-    visualize_categories(categories,app.user['username'])
+    print(categories)
+    categories = [drop_sensitive_info_from_category(app, category) for category in categories]
+    visualize_categories(categories)
+
+
+def drop_sensitive_info_from_category(app, category):
+    category['owner'] = app.user['username']
+    accounts_number = len(category['accounts'])
+    if accounts_number > 5:
+        category['accounts'] = f'{accounts_number} accounts'
+        return category
+    accounts_names = []
+    for account_key in category['accounts']:
+        try:
+            account = app.client.get(account_key)
+            if account:
+                accounts_names.append(account['account_name'])
+        except AttributeError as exc:
+            raise AttributeError('Category has invalid accounts.') from exc
+    category['accounts'] = accounts_names
+    return category
