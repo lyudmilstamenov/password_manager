@@ -6,7 +6,7 @@ SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE = 'Account with {} was successfully created
                                        + ENTER_COMMAND_WITH_USER_MESSAGE
 DELETED_ACCOUNT_MESSAGE = 'Account with account name {} was successfully deleted.' \
                           + ENTER_COMMAND_WITH_USER_MESSAGE
-UPDATED_ACCOUNT_MESSAGE = 'Account with {} was successfully updated.' \
+UPDATED_ACCOUNT_MESSAGE = 'Account with account name {} was successfully updated.' \
                           + ENTER_COMMAND_WITH_USER_MESSAGE
 UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE = 'In order not to change the following property click "enter"'
 ACCOUNT_NOT_FOUND_MESSAGE = 'Account with account name {} was not found.'

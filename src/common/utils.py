@@ -14,6 +14,12 @@ def visualize_accounts(owner_name, accounts):
     print(tabulate.tabulate(rows, ACCOUNT_PROPERTIES))
 
 
+def visualize_org(org):
+    print('Organization name: ' + org['org_name'])
+    print('Owner name: ' + org['owner'])
+    print('Members: ' + ', '.join(org['users']))
+
+
 def drop_sensitive_info(account, owner_name):
     account['password'] = '*' * account['pwd_length']
     account['owner'] = owner_name

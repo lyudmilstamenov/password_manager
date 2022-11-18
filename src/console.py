@@ -1,17 +1,20 @@
 from os import system, name
 
-from .app import App
-from .models import user_manager
-from .models.account_manager import add_account, edit_account, \
+from app import App
+from models import user_manager
+from models.account_manager import add_account, edit_account, \
     delete_account, view_account, copy_password, \
     visualize_password, open_url
-from .models.category_manager import delete_category, view_all_accounts_by_category, view_all_categories
-from .common.erros import StopError, QuitError
-from .common.account_consts import NO_LAST_ACCOUNT_MESSAGE
-from .common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE,\
+from models.category_manager import delete_category, view_all_accounts_by_category, view_all_categories
+from models.org_manager import create_organization, add_user_organization, remove_user_from_organization, delete_org, \
+    view_org
+from common.erros import StopError, QuitError
+from common.account_consts import NO_LAST_ACCOUNT_MESSAGE
+from common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, \
     HELP_INFO, NOT_ENOUGH_ARGUMENTS_MESSAGE, \
     INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE, ONLY_LOGIN_MESSAGE, STOP_MESSAGE, \
     ENTER_COMMAND_WITH_USER_MESSAGE, QUIT_MESSAGE
+
 
 def console():
     app = App()
@@ -55,6 +58,8 @@ def console():
             input_message = QUIT_MESSAGE + str(exc) + HELP_MESSAGE + ENTER_COMMAND_WITH_USER_MESSAGE.format(
                 app.user['username'])
 
+    print(STOP_MESSAGE)
+
 
 def login_or_signup(commands, app):
     if commands[0] == 'LOGIN':
@@ -87,14 +92,17 @@ def handle_user_commands(commands, app):
 def handle_account_commands(commands, app):
     if commands[0] == 'ADD':
         return add_account(app)
-    if len(commands) < 2:
-        raise ValueError(NOT_ENOUGH_ARGUMENTS_MESSAGE)
+    check_arguments_size(commands)
     if commands[0] == 'CAT':
         return view_all_accounts_by_category(app, commands[1])
     if commands[0] == 'EDIT':
         return edit_account(app, commands[1])
     if commands[0] == '-RM':
         return delete_account(app, commands[1])
+    return handle_account_view_commands(commands, app)
+
+
+def handle_account_view_commands(commands, app):
     if commands[1] == '-last' and not app.last_account:
         raise ValueError(NO_LAST_ACCOUNT_MESSAGE)
     if commands[1] == '-last':
@@ -111,7 +119,20 @@ def handle_account_commands(commands, app):
 
 
 def handle_org_commands(commands, app):
-    pass
+    check_arguments_size(commands)
+    if commands[0] == 'CREATE':
+        return create_organization(app, commands[1:])
+    if commands[0] == 'DELETE':
+        return delete_org(app, commands[1])
+    if commands[0] == 'VIEW':
+        return view_org(app, commands[1])
+    check_arguments_size(commands, 3)
+    if commands[0] == 'ADD':
+        return add_user_organization(app, commands[1], commands[2])
+    if commands[0] == 'REMOVE':
+        return remove_user_from_organization(app, commands[1], commands[2])
+
+    raise ValueError(INVALID_ARGUMENTS_MESSAGE)
 
 
 def visualize_help():
@@ -125,6 +146,11 @@ def clear():
     # for mac and linux(here, os.name is 'posix')
     else:
         _ = system('clear')
+
+
+def check_arguments_size(commands, size=2):
+    if len(commands) < size:
+        raise ValueError(NOT_ENOUGH_ARGUMENTS_MESSAGE)
 
 
 if __name__ == '__main__':

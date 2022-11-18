@@ -2,19 +2,18 @@ import getpass
 import time
 from google.cloud import datastore
 
-from ..cryptography import get_hashed_password, check_password
-from ..common.consts import LOGIN_OR_SIGNUP_MESSAGE, \
+from cryptography import get_hashed_password, check_password
+from common.consts import LOGIN_OR_SIGNUP_MESSAGE, \
     USER_NOT_FOUND_MESSAGE, WAIT_MESSAGE, HELP_MESSAGE, \
     USER_EXISTS_MESSAGE, SUCCESSFUL_LOGIN_MESSAGE, SUCCESSFUL_SIGNUP_MESSAGE, \
     LOGGED_IN_MESSAGE, WRONG_PWD_MESSAGE
-from ..database.datastore_manager import check_user_exists
-from ..database.base import save_entity
-from ..validation import validate_email, validate_password, validate_entity_name
+from database.datastore_manager import check_user_exists
+from database.base import save_entity
+from validation import validate_email, validate_password, validate_entity_name
+
 
 def signup(app):
-    username = validate_entity_name(input('username: '),
-                                    'User', 'username',
-                                    lambda value: check_user_exists(app.client, value))
+    username = validate_entity_name(app, input('username: '), entity_kind='User')
     user_info = {'username': username,
                  'email': validate_email(input('email: ')),
                  'password': validate_password(getpass.getpass())}

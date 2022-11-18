@@ -4,20 +4,20 @@ import pyperclip
 from validators import url as url_validator
 from google.cloud import datastore
 
-from ..models.category_manager import add_account_to_category, update_category
-from ..database.datastore_manager import check_account_exists, retrieve_all_accounts_by_user
-from ..database.base import save_entity
-from ..validation import validate_string_property, validate_email, \
+from models.category_manager import add_account_to_category, update_category
+from database.datastore_manager import check_account_exists, retrieve_all_accounts_by_user
+from database.base import save_entity
+from validation import validate_string_property, validate_email, \
     validate_url, validate_password, validate_entity_name
-from ..common.utils import visualize_accounts
-from ..common.account_consts import ACCOUNT_EXISTS_MESSAGE, SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE, \
+from common.utils import visualize_accounts
+from common.account_consts import ACCOUNT_EXISTS_MESSAGE, SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE, \
     ENTER_COMMAND_WITH_USER_MESSAGE, COPIED_TO_CLIPBOARD_MESSAGE, \
     SHOW_PWD_MESSAGE, DELETED_ACCOUNT_MESSAGE, UPDATED_ACCOUNT_MESSAGE, \
     UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE, ACCOUNT_NAME_INPUT_MESSAGE, \
     APP_NAME_INPUT_MESSAGE, LOGIN_URL_INPUT_MESSAGE, CATEGORY_INPUT_MESSAGE, \
     USERNAME_INPUT_MESSAGE, EMAIL_INPUT_MESSAGE, NOTES_INPUT_MESSAGE, PWD_INPUT_MESSAGE, \
     ACCOUNT_NOT_FOUND_MESSAGE, URL_OPENED_MESSAGE, URL_NOT_VALID_MESSAGE
-from ..cryptography import encrypt, decrypt
+from cryptography import encrypt, decrypt
 
 
 def add_account(app):
@@ -116,11 +116,9 @@ def retrieve_account_by_account_name(app, account_name):
 
 def populate_account_info(app, can_be_empty=False):
     account_info = {
-        'account_name': validate_entity_name(input(ACCOUNT_NAME_INPUT_MESSAGE),
-                                             'Account',
-                                             'account name',
-                                             lambda value: check_account_exists(app.client, value, app.user),
-                                             can_be_empty),
+        'account_name': validate_entity_name(app, input(ACCOUNT_NAME_INPUT_MESSAGE),
+                                             entity_kind='Account',
+                                             can_be_empty=can_be_empty),
         'app_name': validate_string_property(input(APP_NAME_INPUT_MESSAGE),
                                              'app name', True),
         'login_url': validate_url(input(LOGIN_URL_INPUT_MESSAGE)),
