@@ -14,3 +14,7 @@ run-v:
 .PHONY: lint
 lint:
 	conda activate pmenv && pylint src/
+
+.PHONY: test
+test:
+	conda activate pmenv && python -m pytest test/

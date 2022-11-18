@@ -1,4 +1,4 @@
-from database.base import create_query
+from .base import create_query
 
 
 def check_user_exists(client, username):

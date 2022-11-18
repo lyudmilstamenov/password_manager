@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from colorama import Fore
 
 BASE_COMMANDS = ['HELP', 'EXIT', 'STOP', 'CLEAR']
@@ -27,9 +25,15 @@ USER_EXISTS_MESSAGE = 'User with username {} already exists.'
 ONLY_LOGIN_MESSAGE = 'You need to login in order to execute other commands.'
 
 EXCEED_RETRIES_MESSAGE = 'You exceeded the allowed number of wrong entries.'
-WEAK_PASSWORD_MESSAGE = Fore.RED + 'The password is weak. Security score: {}' + Fore.RESET
-MODERATE_PASSWORD_MESSAGE = Fore.YELLOW + 'The password is moderate. Security score: {}' + Fore.RESET
-STRONG_PASSWORD_MESSAGE = Fore.GREEN + 'The password is strong. Security score: {}' + Fore.RESET
+WEAK_PASSWORD_MESSAGE = Fore.RED + \
+                        'The password is weak. Security score: {}' +\
+                        Fore.RESET
+MODERATE_PASSWORD_MESSAGE = Fore.YELLOW + \
+                            'The password is moderate. Security score: {}' +\
+                            Fore.RESET
+STRONG_PASSWORD_MESSAGE = Fore.GREEN +\
+                          'The password is strong. Security score: {}' +\
+                          Fore.RESET
 
 KIND_EXISTS_MESSAGE = '{} with the same {} already exists. '
 KIND_EXISTS_EXCEEDS_ENTRIES_MESSAGE = KIND_EXISTS_MESSAGE + EXCEED_RETRIES_MESSAGE
@@ -37,10 +41,10 @@ CHANGE_PASSWORD_MESSAGE = 'Do you want to change it?[yes/no]'
 
 CLEAR_MESSAGE = 'Please enter "clear" after that in order the password to be removed from the console.'
 
-STRING_PROPERTY_VALIDATION_ERROR_MESSAGE = 'Invalid value. The {} can contains only ' \
-                                           'letters, digits and ._-. Enter a valid value or ' \
-                                           'enter "exit" to quit the current state of the ' \
-                                           'programme. '
+STRING_PROPERTY_VALIDATION_ERROR_MESSAGE = \
+    'Invalid value. The {} can contains only ' \
+    'letters, digits and ._-. Enter a valid value or ' \
+    'enter "exit" to quit the current state of the programme. '
 
 EMAIL_VALIDATION_ERROR_MESSAGE = 'Invalid email. Enter a valid value or ' \
                                  'enter "exit" to quit the current state of the ' \

@@ -1,16 +1,17 @@
-from common.account_consts import NO_LAST_ACCOUNT_MESSAGE
-from models import user_manager
-from app import App
-from common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, HELP_INFO, NOT_ENOUGH_ARGUMENTS_MESSAGE, \
-    INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE, ONLY_LOGIN_MESSAGE, STOP_MESSAGE, \
-    ENTER_COMMAND_WITH_USER_MESSAGE, QUIT_MESSAGE
-from models.account_manager import add_account, edit_account, delete_account, view_account, copy_password, \
-    visualize_password, open_url
 from os import system, name
 
-from models.category_manager import delete_category, view_all_accounts_by_category, view_all_categories
-from common.erros import StopError, QuitError
-
+from .app import App
+from .models import user_manager
+from .models.account_manager import add_account, edit_account, \
+    delete_account, view_account, copy_password, \
+    visualize_password, open_url
+from .models.category_manager import delete_category, view_all_accounts_by_category, view_all_categories
+from .common.erros import StopError, QuitError
+from .common.account_consts import NO_LAST_ACCOUNT_MESSAGE
+from .common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE,\
+    HELP_INFO, NOT_ENOUGH_ARGUMENTS_MESSAGE, \
+    INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE, ONLY_LOGIN_MESSAGE, STOP_MESSAGE, \
+    ENTER_COMMAND_WITH_USER_MESSAGE, QUIT_MESSAGE
 
 def console():
     app = App()

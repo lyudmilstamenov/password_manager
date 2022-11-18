@@ -45,7 +45,3 @@ def check_password(plain_text_password, hashed_password):
 #     except sc.error:
 #         return False
 
-if __name__ == '__main__':
-    a = '1441212'
-    print(encrypt(a, 'master'))
-    print(decrypt(encrypt('sad', 'as'), 'master'))

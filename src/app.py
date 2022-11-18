@@ -1,10 +1,17 @@
 import os
 from google.cloud import datastore
+
+
 class App:
+    """
+    Saves information about the current state of the programme including:
+     logged in user, most recently used account and datastore client.
+    """
+
     def __init__(self):
         self.__user = None
-        os.environ[
-            "GOOGLE_APPLICATION_CREDENTIALS"] = 'E:/Hobbies/coding/personal_projects/password_function/credentials.json'
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] \
+            = 'E:/Hobbies/coding/personal_projects/password_function/credentials.json'
 
         self.__client = datastore.Client()
         self.__last_account = None

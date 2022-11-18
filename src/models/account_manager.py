@@ -1,26 +1,23 @@
+import webbrowser
 from getpass import getpass
-
 import pyperclip
+from validators import url as url_validator
 from google.cloud import datastore
 
-from common.account_consts import URL_OPENED_MESSAGE, URL_NOT_VALID_MESSAGE
-from models.category_manager import add_account_to_category, update_category
-from common.utils import visualize_accounts
-from database.datastore_manager import check_account_exists
-from database.base import save_entity
-from validation import validate_string_property, validate_email, validate_url, validate_password
-
-from validation import validate_entity_name
-
-from common.account_consts import ACCOUNT_EXISTS_MESSAGE, SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE, \
-    ENTER_COMMAND_WITH_USER_MESSAGE, \
-    COPIED_TO_CLIPBOARD_MESSAGE, SHOW_PWD_MESSAGE, DELETED_ACCOUNT_MESSAGE, UPDATED_ACCOUNT_MESSAGE, \
-    UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE, ACCOUNT_NAME_INPUT_MESSAGE, APP_NAME_INPUT_MESSAGE, LOGIN_URL_INPUT_MESSAGE, \
-    CATEGORY_INPUT_MESSAGE, USERNAME_INPUT_MESSAGE, EMAIL_INPUT_MESSAGE, NOTES_INPUT_MESSAGE, PWD_INPUT_MESSAGE, \
-    ACCOUNT_NOT_FOUND_MESSAGE
-from cryptography import encrypt, decrypt
-from validators import url as url_validator
-from database.datastore_manager import retrieve_all_accounts_by_user
+from ..models.category_manager import add_account_to_category, update_category
+from ..database.datastore_manager import check_account_exists, retrieve_all_accounts_by_user
+from ..database.base import save_entity
+from ..validation import validate_string_property, validate_email, \
+    validate_url, validate_password, validate_entity_name
+from ..common.utils import visualize_accounts
+from ..common.account_consts import ACCOUNT_EXISTS_MESSAGE, SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE, \
+    ENTER_COMMAND_WITH_USER_MESSAGE, COPIED_TO_CLIPBOARD_MESSAGE, \
+    SHOW_PWD_MESSAGE, DELETED_ACCOUNT_MESSAGE, UPDATED_ACCOUNT_MESSAGE, \
+    UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE, ACCOUNT_NAME_INPUT_MESSAGE, \
+    APP_NAME_INPUT_MESSAGE, LOGIN_URL_INPUT_MESSAGE, CATEGORY_INPUT_MESSAGE, \
+    USERNAME_INPUT_MESSAGE, EMAIL_INPUT_MESSAGE, NOTES_INPUT_MESSAGE, PWD_INPUT_MESSAGE, \
+    ACCOUNT_NOT_FOUND_MESSAGE, URL_OPENED_MESSAGE, URL_NOT_VALID_MESSAGE
+from ..cryptography import encrypt, decrypt
 
 
 def add_account(app):
@@ -33,7 +30,8 @@ def add_account(app):
     save_entity(app.client, account, account_info)
     add_account_to_category(app, account_info['category'], account.key)
     app.last_account = account
-    return SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE.format(account_info['account_name'], app.user['username'])
+    return SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE \
+        .format(account_info['account_name'], app.user['username'])
 
 
 def edit_account(app, account_name):
@@ -103,7 +101,6 @@ def open_url(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
     url = account['login_url']
     if url and url_validator(url):
-        import webbrowser
         webbrowser.open(url)
         return URL_OPENED_MESSAGE.format(app.user['username'])
     return URL_NOT_VALID_MESSAGE.format(app.user['username'])
@@ -124,13 +121,17 @@ def populate_account_info(app, can_be_empty=False):
                                              'account name',
                                              lambda value: check_account_exists(app.client, value, app.user),
                                              can_be_empty),
-        'app_name': validate_string_property(input(APP_NAME_INPUT_MESSAGE), 'app name', True),
+        'app_name': validate_string_property(input(APP_NAME_INPUT_MESSAGE),
+                                             'app name', True),
         'login_url': validate_url(input(LOGIN_URL_INPUT_MESSAGE)),
-        'category': validate_string_property(input(CATEGORY_INPUT_MESSAGE), 'category', True),
-        'username': validate_string_property(input(USERNAME_INPUT_MESSAGE), 'username', can_be_empty),
+        'category': validate_string_property(input(CATEGORY_INPUT_MESSAGE),
+                                             'category', True),
+        'username': validate_string_property(input(USERNAME_INPUT_MESSAGE),
+                                             'username', can_be_empty),
         'email': validate_email(input(EMAIL_INPUT_MESSAGE), can_be_empty),
         'notes': input(NOTES_INPUT_MESSAGE),
-        'password': validate_password(getpass(PWD_INPUT_MESSAGE), skip_validation=True, can_be_empty=can_be_empty)
+        'password': validate_password(getpass(PWD_INPUT_MESSAGE),
+                                      skip_validation=True, can_be_empty=can_be_empty)
     }
     account_info['pwd_length'] = len(account_info['password'])
     return account_info
