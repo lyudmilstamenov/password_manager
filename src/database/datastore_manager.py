@@ -22,12 +22,8 @@ def check_account_exists(client, account_name, user):
 
 
 def check_org_exist(client, org_name, user):
-    query = client.query(kind="Organization")
-    query.add_filter("org_name", "=", org_name)
-    query.add_filter("users", "=", user.key)
-    return list(query.fetch())
+    return create_query(client, 'Organization', {'users': user.key, 'org_name': org_name})
 
 
 def check_owner_of_org(client, org_name, user):
-    print(user)
     return create_query(client, 'Organization', {'owner': user.key, 'org_name': org_name})
