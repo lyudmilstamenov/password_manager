@@ -35,7 +35,6 @@ def check_password(plain_text_password, hashed_password):
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
 
 
-# TODO not working
 # def hash_password(password, maxtime=0.5, datalength=64):
 #     return sc.encrypt(os.urandom(datalength), password, maxtime=maxtime)
 #

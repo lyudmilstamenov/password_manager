@@ -2,17 +2,18 @@ import getpass
 import re
 from password_strength import PasswordStats, PasswordPolicy
 from validators import url as url_validator, email as email_validator
-from colorama import Fore
 
 from common.erros import QuitError, StopError
 
 from common.consts import STRING_PROPERTY_VALIDATION_ERROR_MESSAGE, EMAIL_VALIDATION_ERROR_MESSAGE, \
-    URL_VALIDATION_ERROR_MESSAGE
+    URL_VALIDATION_ERROR_MESSAGE, EXCEED_RETRIES_MESSAGE, WEAK_PASSWORD_MESSAGE, \
+    MODERATE_PASSWORD_MESSAGE, STRONG_PASSWORD_MESSAGE, KIND_EXISTS_EXCEEDS_ENTRIES_MESSAGE, KIND_EXISTS_MESSAGE, \
+    CHANGE_PASSWORD_MESSAGE
 
 
 def validate_property(property_value, property_name, error_message, error_handler, can_be_empty, counter=0):
     if counter >= 5:
-        raise QuitError('You exceeded the allowed number of wrong entries.')
+        raise QuitError(EXCEED_RETRIES_MESSAGE)
     if property_value.upper == 'EXIT':
         raise QuitError()
     if property_value.upper == 'STOP':
@@ -44,45 +45,42 @@ def validate_string_property(property_value, property_name, can_be_empty=False):
                              is_string_property_valid, can_be_empty)
 
 
-def validate_password(password, can_be_empty=False):
+def validate_password(password, skip_validation=False, can_be_empty=False):
     if can_be_empty and not password:
         return password
     policy = PasswordPolicy.from_names(
-        length=8,  # min length: 8
-        uppercase=2,  # need min. 2 uppercase letters
-        numbers=2,  # need min. 2 digits
-        special=2,  # need min. 2 special characters
+        length=6,  # min length: 8
+        uppercase=1,  # need min. 2 uppercase letters
+        numbers=1,  # need min. 2 digits
+        special=1,  # need min. 2 special characters
     )
-    if policy.test(password):
-        print(
-            'Invalid password. The password should contain at least 8 characters, 2 uppercase letters, 2 digits and 2special characters.')
+    if (not skip_validation) and policy.test(password):
+        print(INVALID_PASSWORD_MESSAGE)
         password = getpass.getpass('password: ')
-        return validate_password(password)
+        return validate_password(password, skip_validation)
     stats = PasswordStats(password)
     security_score = stats.strength() * 10
     if security_score < 4:
-        print(Fore.RED + f'The password is weak. Security score: {security_score}' + Fore.RESET)
+        print(WEAK_PASSWORD_MESSAGE.format(security_score))
     elif security_score < 7.8:
-        print(Fore.YELLOW + f'The password is moderate. Security score: {security_score}' + Fore.RESET)
+        print(MODERATE_PASSWORD_MESSAGE.format(security_score))
     else:
-        print(Fore.GREEN + f'The password is strong. Security score: {security_score}' + Fore.RESET)
+        print(STRONG_PASSWORD_MESSAGE.format(security_score))
 
-    answer = input('Do you want to change it?[yes/no]')
+    answer = input(CHANGE_PASSWORD_MESSAGE)
     if answer.upper() == 'YES':
         password = getpass.getpass('password: ')
-        return validate_password(password)
+        return validate_password(password, skip_validation)
     return password
 
 
 def validate_entity_name(property_value, kind_name, property_name, check_entity_exists, can_be_empty=False,
                          number_of_tries=0):
-    print(check_entity_exists)
     if number_of_tries >= 3:
-        raise QuitError(
-            f'{kind_name} with the same {property_name} already exists and you have exceeded the allowed number of wrong entries.')
+        raise QuitError(KIND_EXISTS_EXCEEDS_ENTRIES_MESSAGE.format(kind_name, property_name))
     property_value = validate_string_property(property_value, property_name, can_be_empty)
     if check_entity_exists(property_value):
-        print(f'{kind_name} with the same {property_name} already exists.')
+        print(KIND_EXISTS_MESSAGE.format(kind_name, property_name))
         property_value = input(f'{property_name}: ')
         return validate_entity_name(property_value, kind_name, property_name, check_entity_exists, can_be_empty,
                                     number_of_tries + 1)

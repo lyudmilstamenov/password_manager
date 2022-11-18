@@ -3,7 +3,8 @@ from getpass import getpass
 import pyperclip
 from google.cloud import datastore
 
-from models.category_manager import add_account_to_category, remove_account_from_category
+from common.account_consts import URL_OPENED_MESSAGE, URL_NOT_VALID_MESSAGE
+from models.category_manager import add_account_to_category, update_category
 from common.utils import visualize_accounts
 from database.datastore_manager import check_account_exists
 from database.base import save_entity
@@ -11,9 +12,14 @@ from validation import validate_string_property, validate_email, validate_url, v
 
 from validation import validate_entity_name
 
-from common.consts import ACCOUNT_EXISTS_MESSAGE
+from common.account_consts import ACCOUNT_EXISTS_MESSAGE, SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE, \
+    ENTER_COMMAND_WITH_USER_MESSAGE, \
+    COPIED_TO_CLIPBOARD_MESSAGE, SHOW_PWD_MESSAGE, DELETED_ACCOUNT_MESSAGE, UPDATED_ACCOUNT_MESSAGE, \
+    UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE, ACCOUNT_NAME_INPUT_MESSAGE, APP_NAME_INPUT_MESSAGE, LOGIN_URL_INPUT_MESSAGE, \
+    CATEGORY_INPUT_MESSAGE, USERNAME_INPUT_MESSAGE, EMAIL_INPUT_MESSAGE, NOTES_INPUT_MESSAGE, PWD_INPUT_MESSAGE, \
+    ACCOUNT_NOT_FOUND_MESSAGE
 from cryptography import encrypt, decrypt
-
+from validators import url as url_validator
 from database.datastore_manager import retrieve_all_accounts_by_user
 
 
@@ -26,26 +32,14 @@ def add_account(app):
     account = datastore.Entity(app.client.key('Account'))
     save_entity(app.client, account, account_info)
     add_account_to_category(app, account_info['category'], account.key)
-    print(f'Account with {account_info["account_name"]} was successfully created.')
     app.last_account = account
-
-
-def update_category(app, old_category_name, new_category_name, account_key):
-    if new_category_name == old_category_name:
-        return
-    if old_category_name:
-        remove_account_from_category(app, old_category_name, account_key)
-
-    if new_category_name == '-del':
-        add_account_to_category(app, '', account_key)
-    else:
-        add_account_to_category(app, new_category_name, account_key)
+    return SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE.format(account_info['account_name'], app.user['username'])
 
 
 def edit_account(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
     account_info = dict(account)
-    print('In order not to change the following property click "enter"')
+    print(UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE)
     new_account_info = populate_account_info(app, True)
     if new_account_info['category']:
         update_category(app, account_info['category'], new_account_info['category'], account.key)
@@ -59,16 +53,15 @@ def edit_account(app, account_name):
             account[key] = ''
 
     save_entity(app.client, account, account_info)
-    print(f'Account with {account_info["account_name"]} was successfully updated.')
     app.last_account = account
-    return
+    return UPDATED_ACCOUNT_MESSAGE.format(account_info['account_name'], app.user['username'])
 
 
 def delete_account(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
     app.client.delete(account.key)
     app.last_account = None
-    print(f'Account with account name {account["account_name"]} was successfully deleted.')
+    return DELETED_ACCOUNT_MESSAGE.format(account['account_name'], app.user['username'])
 
 
 def view_account(app, command):
@@ -81,51 +74,63 @@ def view_all_accounts(app):
     accounts = retrieve_all_accounts_by_user(app.client, app.user)
     visualize_accounts(app.user['username'], accounts)
     app.last_account = None
-    return 'msg'
+    return ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
 
 
 def view_account_by_account_name(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
     visualize_accounts(app.user['username'], [account])
     app.last_account = account
-    return 'msg'
-
-
-def populate_account_info(app, can_be_empty=False):
-    account_info = {
-        'account_name': validate_entity_name(input('account name (This name must be unique per account.): '), 'Account',
-                                             'account name',
-                                             lambda value: check_account_exists(app.client, value, app.user),
-                                             can_be_empty),
-        'app_name': validate_string_property(input('app name []: '), 'app name', True),
-        'login_url': validate_url(input('login url []: ')),
-        'category': validate_string_property(input('category []: '), 'category', True),
-        'username': validate_string_property(input('username: '), 'username', can_be_empty),
-        'email': validate_email(input('email: '), can_be_empty),
-        'notes': input('notes: '),
-        'password': validate_password(getpass('password: '))}
-    account_info['pwd_length'] = len(account_info['password'])
-    return account_info
+    return ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
 
 
 def visualize_password(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
     password = decrypt(account['password'], app.user['password'])  # decrypt
-    print(f'Your password is {password}.')
     app.last_account = account
+    return SHOW_PWD_MESSAGE.format(password, app.user['username'])
 
 
 def copy_password(app, account_name):
     account = retrieve_account_by_account_name(app, account_name)
-    password = account['password']  # decrypt
-    pyperclip.copy(decrypt(password, app.user['password']))
-    print('The password was successfully copied to your clipboard.')
+    password = decrypt(account['password'], app.user['password'])  # decrypt
+    pyperclip.copy(password)
     app.last_account = account
+    return COPIED_TO_CLIPBOARD_MESSAGE.format(app.user['username'])
+
+
+def open_url(app, account_name):
+    account = retrieve_account_by_account_name(app, account_name)
+    url = account['login_url']
+    if url and url_validator(url):
+        import webbrowser
+        webbrowser.open(url)
+        return URL_OPENED_MESSAGE.format(app.user['username'])
+    return URL_NOT_VALID_MESSAGE.format(app.user['username'])
 
 
 def retrieve_account_by_account_name(app, account_name):
     if app.last_account and account_name == app.last_account['account_name']:
         return app.last_account
     if not (accounts := check_account_exists(app.client, account_name, app.user)):
-        raise ValueError(f'Account with account name {account_name} was not found.')
+        raise ValueError(ACCOUNT_NOT_FOUND_MESSAGE.format(account_name))
     return accounts[0]
+
+
+def populate_account_info(app, can_be_empty=False):
+    account_info = {
+        'account_name': validate_entity_name(input(ACCOUNT_NAME_INPUT_MESSAGE),
+                                             'Account',
+                                             'account name',
+                                             lambda value: check_account_exists(app.client, value, app.user),
+                                             can_be_empty),
+        'app_name': validate_string_property(input(APP_NAME_INPUT_MESSAGE), 'app name', True),
+        'login_url': validate_url(input(LOGIN_URL_INPUT_MESSAGE)),
+        'category': validate_string_property(input(CATEGORY_INPUT_MESSAGE), 'category', True),
+        'username': validate_string_property(input(USERNAME_INPUT_MESSAGE), 'username', can_be_empty),
+        'email': validate_email(input(EMAIL_INPUT_MESSAGE), can_be_empty),
+        'notes': input(NOTES_INPUT_MESSAGE),
+        'password': validate_password(getpass(PWD_INPUT_MESSAGE), skip_validation=True, can_be_empty=can_be_empty)
+    }
+    account_info['pwd_length'] = len(account_info['password'])
+    return account_info

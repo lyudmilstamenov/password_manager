@@ -1,9 +1,6 @@
 import tabulate
-from common.consts import ACCOUNTS_ORDER, ACCOUNT_PROPERTIES, CATEGORY_PROPERTIES, CATEGORIES_ORDER
-
-
-
-
+from common.account_consts import ACCOUNTS_ORDER, ACCOUNT_PROPERTIES
+from common.category_consts import CATEGORY_PROPERTIES, CATEGORIES_ORDER
 
 
 def visualize_accounts(owner_name, accounts):

@@ -1,5 +1,8 @@
 from google.cloud import datastore
 
+from common.category_consts import CATEGORY_NOT_FOUND_MESSAGE, DELETED_CATEGORY_MESSAGE, \
+    REMOVE_CATEGORY_QUESTION_MESSAGE, CATEGORY_NOT_DELETED_MESSAGE
+from common.consts import ENTER_COMMAND_WITH_USER_MESSAGE
 from common.utils import visualize_accounts, visualize_categories
 from database.datastore_manager import retrieve_all_categories_by_user, check_category_exists
 from database.base import save_entity
@@ -24,7 +27,7 @@ def add_account_to_category(app, category_name, account_key):
 def remove_account_from_category(app, category_name, account_key):
     categories = check_category_exists(app.client, category_name, app.user)
     if not categories:
-        raise ValueError(f'Category with category name {category_name} was not found.')
+        raise ValueError(CATEGORY_NOT_FOUND_MESSAGE.format(category_name))
     category = categories[0]
     category_info = dict(category)
     if account_key in category_info['accounts']:
@@ -36,18 +39,15 @@ def remove_account_from_category(app, category_name, account_key):
 def delete_category(app, category_name):
     categories = check_category_exists(app.client, category_name, app.user)
     if not categories:
-        raise ValueError(f'Category with category name {category_name} was not found.')
+        raise ValueError(CATEGORY_NOT_FOUND_MESSAGE.format(category_name))
     category = categories[0]
     if category['accounts']:
-        answer = input(
-            'There are accounts who are part of this category. Are you sure that you want to delete the category?['
-            'yes/no]')
+        answer = input(REMOVE_CATEGORY_QUESTION_MESSAGE)
         if answer.upper() != 'YES':
-            print('The category was not removed.')
-            return
+            return CATEGORY_NOT_DELETED_MESSAGE.format(app.user['username'])
         remove_all_accounts_from_category(app, category)
     app.client.delete(category.key)
-    print(f'Category with category name {category["category_name"]} was successfully removed.')
+    return DELETED_CATEGORY_MESSAGE.format(category['category_name'], app.user['username'])
 
 
 def remove_all_accounts_from_category(app, category):
@@ -75,6 +75,19 @@ def view_all_categories(app):
     print(categories)
     categories = [drop_sensitive_info_from_category(app, category) for category in categories]
     visualize_categories(categories)
+    return ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
+
+
+def update_category(app, old_category_name, new_category_name, account_key):
+    if new_category_name == old_category_name:
+        return
+    if old_category_name:
+        remove_account_from_category(app, old_category_name, account_key)
+
+    if new_category_name == '-del':
+        add_account_to_category(app, '', account_key)
+    else:
+        add_account_to_category(app, new_category_name, account_key)
 
 
 def drop_sensitive_info_from_category(app, category):

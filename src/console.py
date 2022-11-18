@@ -1,9 +1,11 @@
+from common.account_consts import NO_LAST_ACCOUNT_MESSAGE
 from models import user_manager
 from app import App
 from common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, HELP_INFO, NOT_ENOUGH_ARGUMENTS_MESSAGE, \
-    INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE
+    INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE, ONLY_LOGIN_MESSAGE, STOP_MESSAGE, \
+    ENTER_COMMAND_WITH_USER_MESSAGE, QUIT_MESSAGE
 from models.account_manager import add_account, edit_account, delete_account, view_account, copy_password, \
-    visualize_password
+    visualize_password, open_url
 from os import system, name
 
 from models.category_manager import delete_category, view_all_accounts_by_category, view_all_categories
@@ -14,7 +16,7 @@ def console():
     app = App()
     key = app.client.key('User', 5632499082330112)
     app.user = app.client.get(key)
-    print('Please enter "help" in order to get information about the commands.')
+    print(HELP_MESSAGE)
     input_message = LOGIN_OR_SIGNUP_MESSAGE
     command = None
     while command != 'STOP':
@@ -35,21 +37,22 @@ def console():
         if command == 'LOGOUT':
             app.user = None
             app.last_account = None
+            input_message = LOGIN_OR_SIGNUP_MESSAGE
             continue
         if not app.user:
             input_message = login_or_signup(commands, app)
             continue
         try:
-            handle_user_commands(commands, app)
+            input_message = handle_user_commands(commands, app)
         except ValueError as exc:
-            print(exc)
-            print(HELP_MESSAGE)
+            input_message = str(exc) + HELP_MESSAGE + ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
+            continue
         except StopError:
-            print('The programme stops.')
+            print(STOP_MESSAGE)
             break
         except QuitError as exc:
-            print('You are quiting the current state of the programme. ' + exc)
-            print(HELP_MESSAGE)
+            input_message = QUIT_MESSAGE + str(exc) + HELP_MESSAGE + ENTER_COMMAND_WITH_USER_MESSAGE.format(
+                app.user['username'])
 
 
 def login_or_signup(commands, app):
@@ -57,7 +60,7 @@ def login_or_signup(commands, app):
         return user_manager.login(app)
     if commands[0] == 'SIGNUP':
         return user_manager.signup(app)
-    return 'Please enter "login" or "signup" in order to login/signup or enter "help" in order to get information about the commands.'
+    return ONLY_LOGIN_MESSAGE + HELP_MESSAGE + '\n$'
 
 
 def handle_category_commands(commands, app):
@@ -91,16 +94,18 @@ def handle_account_commands(commands, app):
         return edit_account(app, commands[1])
     if commands[0] == '-RM':
         return delete_account(app, commands[1])
-    if commands[1] == '-last' and app.last_account:
+    if commands[1] == '-last' and not app.last_account:
+        raise ValueError(NO_LAST_ACCOUNT_MESSAGE)
+    if commands[1] == '-last':
         commands[1] = app.last_account['account_name']
-    elif not app.last_account:
-        raise ValueError('No account was used recently.')
     if commands[0] == 'VIEW':
         return view_account(app, commands[1])
     if commands[0] == 'COPY-PWD':
         return copy_password(app, commands[1])
     if commands[0] == 'PWD':
         return visualize_password(app, commands[1])
+    if commands[0] == 'URL':
+        return open_url(app, commands[1])
     raise ValueError(INVALID_ARGUMENTS_MESSAGE)
 
 
