@@ -95,12 +95,12 @@ def remove_user_from_organization(app, org_name, username):
 
 
 def remove_all_users_from_org(app, org):
-    for user in org['users']:
-        delete_org_from_user(app.client, org, user)
+    for user_key in org['users']:
+        delete_org_from_user(app.client, org, app.client.get(user_key))
 
 
 def delete_org(app, org_name):
-    org = retrieve_org(app.client, org_name, app.user)
+    org = retrieve_org(app.client, app.user, org_name)
     if org['users']:
         answer = input(REMOVE_ORG_QUESTION_MESSAGE)
         if answer.upper() != 'YES':

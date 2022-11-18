@@ -29,4 +29,5 @@ def check_org_exist(client, org_name, user):
 
 
 def check_owner_of_org(client, org_name, user):
+    print(user)
     return create_query(client, 'Organization', {'owner': user.key, 'org_name': org_name})
