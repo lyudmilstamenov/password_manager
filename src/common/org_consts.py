@@ -1,4 +1,4 @@
-from common.consts import ENTER_COMMAND_WITH_USER_MESSAGE
+from .consts import ENTER_COMMAND_WITH_USER_MESSAGE
 
 USERS_NOT_FOUND_MESSAGE = 'The following users {} were not found.'
 SUCCESSFULLY_CREATED_ORG_MESSAGE = 'Organization with {} was successfully created.' \

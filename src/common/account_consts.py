@@ -8,7 +8,8 @@ DELETED_ACCOUNT_MESSAGE = 'Account with account name {} was successfully deleted
                           + ENTER_COMMAND_WITH_USER_MESSAGE
 UPDATED_ACCOUNT_MESSAGE = 'Account with account name {} was successfully updated.' \
                           + ENTER_COMMAND_WITH_USER_MESSAGE
-UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE = 'In order not to change the following property click "enter"'
+UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE = 'In order not to change ' \
+                                         'the following property click "enter"'
 ACCOUNT_NOT_FOUND_MESSAGE = 'Account with account name {} was not found.'
 ACCOUNT_EXISTS_MESSAGE = 'Account with account name {} already exists.'
 NO_LAST_ACCOUNT_MESSAGE = 'No account was used recently.'

@@ -44,4 +44,3 @@ def check_password(plain_text_password, hashed_password):
 #         return True
 #     except sc.error:
 #         return False
-

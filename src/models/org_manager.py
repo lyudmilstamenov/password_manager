@@ -1,14 +1,15 @@
 from google.cloud import datastore
 
-from common.consts import USER_NOT_FOUND_MESSAGE, ENTER_COMMAND_WITH_USER_MESSAGE
-from common.erros import QuitError
-from common.org_consts import USERS_NOT_FOUND_MESSAGE, SUCCESSFULLY_CREATED_ORG_MESSAGE, DELETED_ORG_MESSAGE, \
+from ..common.consts import USER_NOT_FOUND_MESSAGE, ENTER_COMMAND_WITH_USER_MESSAGE
+from ..common.erros import QuitError
+from ..common.org_consts import USERS_NOT_FOUND_MESSAGE, \
+    SUCCESSFULLY_CREATED_ORG_MESSAGE, DELETED_ORG_MESSAGE, \
     ADDED_USER_TO_ORG_MESSAGE, REMOVED_USER_FROM_ORG_MESSAGE, REMOVE_YOURSELF_FROM_ORG_MESSAGE, \
     ORG_NOT_DELETED_MESSAGE, REMOVE_ORG_QUESTION_MESSAGE
-from common.utils import visualize_org
-from database.base import save_entity
-from database.datastore_manager import check_user_exists, check_owner_of_org
-from validation import validate_entity_name
+from ..common.utils import visualize_org
+from ..database.base import save_entity
+from ..database.datastore_manager import check_user_exists, check_owner_of_org
+from ..security.validation import validate_entity_name
 
 
 def add_org_to_user(client, user, org):
@@ -49,7 +50,7 @@ def add_user_organization(app, org_name, username):
     if not users:
         raise ValueError(USER_NOT_FOUND_MESSAGE.format(username))
     org_info['users'].append(users[0].key)
-    add_org_to_user(app.client, users[0],org)
+    add_org_to_user(app.client, users[0], org)
     save_entity(app.client, org, org_info)
 
     return ADDED_USER_TO_ORG_MESSAGE.format(username, org_name, app.user['username'])
@@ -87,7 +88,7 @@ def remove_user_from_organization(app, org_name, username):
     if not users:
         raise ValueError(USER_NOT_FOUND_MESSAGE.format(username))
     org_info['users'].remove(users[0].key)
-    delete_org_from_user(app.client, users[0])
+    delete_org_from_user(app.client, org, users[0])
     save_entity(app.client, org, org_info)
 
     return REMOVED_USER_FROM_ORG_MESSAGE.format(username, org_name, app.user['username'])
@@ -95,7 +96,7 @@ def remove_user_from_organization(app, org_name, username):
 
 def remove_all_users_from_org(app, org):
     for user in org['users']:
-        delete_org_from_user(app.client, user)
+        delete_org_from_user(app.client, org, user)
 
 
 def delete_org(app, org_name):
