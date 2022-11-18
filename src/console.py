@@ -4,8 +4,10 @@ from .models import user_manager
 from .models.account_manager import add_account, edit_account, \
     delete_account, view_account, copy_password, \
     visualize_password, open_url
-from .models.category_manager import delete_category, view_all_accounts_by_category, view_all_categories
-from .models.org_manager import create_organization, add_user_organization, remove_user_from_organization, delete_org, \
+from .models.category_manager import delete_category, \
+    view_all_accounts_by_category, view_all_categories
+from .models.org_manager import create_organization, \
+    add_user_organization, remove_user_from_organization, delete_org, \
     view_org
 from .common.erros import StopError, QuitError
 from .common.account_consts import NO_LAST_ACCOUNT_MESSAGE
@@ -29,13 +31,17 @@ def console():
         try:
             input_message = handle_commands(app, commands)
         except ValueError as exc:
-            input_message = str(exc) + HELP_MESSAGE + ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
+            input_message = str(exc) + \
+                            HELP_MESSAGE + \
+                            ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
             continue
         except StopError:
-            print(STOP_MESSAGE)
             break
         except QuitError as exc:
-            input_message = QUIT_MESSAGE + str(exc) + HELP_MESSAGE + ENTER_COMMAND_WITH_USER_MESSAGE.format(
+            input_message = QUIT_MESSAGE + \
+                            str(exc) \
+                            + HELP_MESSAGE \
+                            + ENTER_COMMAND_WITH_USER_MESSAGE.format(
                 app.user['username'])
 
     print(STOP_MESSAGE)
@@ -45,10 +51,10 @@ def handle_commands(app, commands):
     command = commands[0]
     if command not in COMMANDS:
         print(INVALID_COMMAND_MESSAGE + HELP_MESSAGE)
-        return '$: ' if not app.user else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
+        return '$: ' if not app.user \
+            else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
     if command in BASE_COMMANDS:
-        handle_base_commands(app, command)
-        return '$: ' if not app.user else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
+        return handle_base_commands(app, command)
     if not app.user:
         return login_or_signup(commands, app)
 
@@ -132,15 +138,16 @@ def handle_org_commands(commands, app):
 def handle_base_commands(app, command):
     if command == 'CLEAR':
         clear()
-        return
+        return '$: ' if not app.user \
+            else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
     if command == 'HELP':
         visualize_help()
-        return
+        return '$: ' if not app.user \
+            else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['username'])
     if command == 'LOGOUT':
         app.user = None
         app.last_account = None
-        input_message = LOGIN_OR_SIGNUP_MESSAGE
-        return
+        return LOGIN_OR_SIGNUP_MESSAGE
     raise StopError()
 
 

@@ -2,15 +2,15 @@ from os import name, system
 
 import tabulate
 
-from ..common.consts import HELP_INFO, HELP_TABLE_ORDER, HELP_TABLE_PROPERTIES, HELP_INFO_LIST
+from ..common.consts import HELP_TABLE_ORDER, HELP_TABLE_PROPERTIES, HELP_INFO_LIST
 
 
 def visualize_help():
-    help = HELP_INFO_LIST
+    help_info = HELP_INFO_LIST
     order = HELP_TABLE_ORDER.copy()
-    order.update(help[0])
-    help[0] = order
-    rows = help
+    order.update(help_info[0])
+    help_info[0] = order
+    rows = help_info
     print(tabulate.tabulate(rows, HELP_TABLE_PROPERTIES))
 
 
