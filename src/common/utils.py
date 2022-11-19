@@ -48,5 +48,5 @@ def check_arguments_size(commands, size=2):
 def get_owner(app, org):
     if org:
         return org
-    else:
-        return app.user
+    return app.user
+

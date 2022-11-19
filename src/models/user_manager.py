@@ -5,7 +5,7 @@ from google.cloud import datastore
 from ..common.consts import LOGIN_OR_SIGNUP_MESSAGE, \
     USER_NOT_FOUND_MESSAGE, WAIT_MESSAGE, HELP_MESSAGE, \
     USER_EXISTS_MESSAGE, SUCCESSFUL_LOGIN_MESSAGE, SUCCESSFUL_SIGNUP_MESSAGE, \
-    WRONG_PWD_MESSAGE, ENTER_COMMAND_WITH_USER_MESSAGE
+    WRONG_PWD_MESSAGE
 from ..database.datastore_manager import check_user_exists
 from ..database.base import save_entity
 from ..security.validation import validate_email, validate_password, validate_entity_name
@@ -38,7 +38,7 @@ def login(app):
             app.user = user
             app.user['password'] = password
 
-            return SUCCESSFUL_LOGIN_MESSAGE.format(username) + ENTER_COMMAND_WITH_USER_MESSAGE.format(username)
+            return SUCCESSFUL_LOGIN_MESSAGE.format(username, username)
         print(WRONG_PWD_MESSAGE.format(2 - i))
     print(WAIT_MESSAGE)
     time.sleep(30)

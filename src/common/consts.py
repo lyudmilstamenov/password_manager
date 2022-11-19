@@ -14,7 +14,8 @@ STOP_MESSAGE = 'The programme stops.'
 QUIT_MESSAGE = 'You are quiting the current state of the programme. '
 LOGIN_OR_SIGNUP_MESSAGE = 'Please log in [login] or sign up [signup]: '
 ENTER_COMMAND_WITH_USER_MESSAGE = '\n' + Fore.GREEN + '{}' + Fore.RESET + ' $ '
-SUCCESSFUL_LOGIN_MESSAGE = 'You have successfully logged in. \nHi {}, I am your password manager.'
+SUCCESSFUL_LOGIN_MESSAGE = 'You have successfully logged in. \nHi {},' \
+                           ' I am your password manager.' + ENTER_COMMAND_WITH_USER_MESSAGE
 SUCCESSFUL_SIGNUP_MESSAGE = 'You have successfully logged in. Please login into your account.\n$ '
 
 WRONG_PWD_MESSAGE = 'Wrong password. You have {} more tries.'

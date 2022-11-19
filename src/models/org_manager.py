@@ -1,9 +1,8 @@
-from getpass import getpass
-
 from google.cloud import datastore
 
-from ..common.account_consts import PWD_INPUT_MESSAGE
-from ..security.cryptography import get_hashed_password
+from .org_helpers import init_org_info, drop_sensitive_info_from_org, \
+    remove_all_users_from_org, retrieve_org, \
+    delete_org_from_user
 from ..common.consts import USER_NOT_FOUND_MESSAGE, ENTER_COMMAND_WITH_USER_MESSAGE
 from ..common.erros import QuitError
 from ..common.org_consts import USERS_NOT_FOUND_MESSAGE, \
@@ -12,8 +11,7 @@ from ..common.org_consts import USERS_NOT_FOUND_MESSAGE, \
     ORG_NOT_DELETED_MESSAGE, REMOVE_ORG_QUESTION_MESSAGE, NO_ORGS_MESSAGE, ALL_ORGS_MESSAGE
 from ..common.utils import visualize_org
 from ..database.base import save_entity
-from ..database.datastore_manager import check_user_exists, check_owner_of_org
-from ..security.validation import validate_entity_name, validate_password
+from ..database.datastore_manager import check_user_exists
 
 
 def add_org_to_user(client, user, org):
@@ -23,37 +21,19 @@ def add_org_to_user(client, user, org):
 
 
 def create_organization(app, users):
-    org_name = validate_entity_name(app, (input('organization name: ')), entity_kind='Organization')
-    org_pwd = validate_password(getpass(PWD_INPUT_MESSAGE))
-    not_found_users = []
-    users_keys = []
-    found_users = []
+    org_info, found_users, not_found_users = init_org_info(app, users)
     org = datastore.Entity(app.client.key('Organization'))
-    for username in users:
-        user = check_user_exists(app.client, username)
-        if not user:
-            not_found_users.append(username)
-            continue
-        users_keys.append(user[0].key)
-        found_users.append(user[0])
-
-    org_info = {
-        'name': org_name,
-        'password': get_hashed_password(org_pwd),
-        'users': users_keys,
-        'owner': app.user.key
-    }
     save_entity(app.client, org, org_info)
     for user in found_users:
         add_org_to_user(app.client, user, org)
     add_org_to_user(app.client, app.user, org)
     if not_found_users:
         return USERS_NOT_FOUND_MESSAGE.format(', '.join(not_found_users)) \
-               + SUCCESSFULLY_CREATED_ORG_MESSAGE.format(org_name, app.user['name'])
-    return SUCCESSFULLY_CREATED_ORG_MESSAGE.format(org_name, app.user['name'])
+               + SUCCESSFULLY_CREATED_ORG_MESSAGE.format(org_info['name'], app.user['name'])
+    return SUCCESSFULLY_CREATED_ORG_MESSAGE.format(org_info['name'], app.user['name'])
 
 
-def add_user_organization(app, org_name, username):
+def add_user_to_organization(app, org_name, username):
     org = retrieve_org(app.client, app.user, org_name)
     org_info = dict(org)
     users = check_user_exists(app.client, username)
@@ -68,27 +48,12 @@ def add_user_organization(app, org_name, username):
                                                                          ''])
 
 
-def delete_org_from_user(client, org, user):
-    user_info = dict(user)
-    user_info['orgs'].remove(org.key)
-    save_entity(client, user, user_info)
-
-
 def view_all_orgs(app):
     orgs = [app.client.get(org_key) for org_key in app.user['orgs']]
     if not orgs:
         return NO_ORGS_MESSAGE.format(app.user['name'])
     orgs_string = ', '.join([org['name'] for org in orgs if org])
     return ALL_ORGS_MESSAGE + orgs_string + ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['name'])
-
-
-def drop_sensitive_info_from_org(app, org_info):
-    usernames = []
-    for user_key in org_info['users']:
-        usernames.append(app.client.get(user_key)['name'])
-    org_info['users'] = usernames
-    org_info['owner'] = app.client.get(org_info['owner'])['name']
-    return org_info
 
 
 def view_org(app, org_name):
@@ -114,11 +79,6 @@ def remove_user_from_organization(app, org_name, username):
     return REMOVED_USER_FROM_ORG_MESSAGE.format(username, org_name, app.user['name'])
 
 
-def remove_all_users_from_org(app, org):
-    for user_key in org['users']:
-        delete_org_from_user(app.client, org, app.client.get(user_key))
-
-
 def delete_org(app, org_name):
     org = retrieve_org(app.client, app.user, org_name)
     if org['users']:
@@ -128,10 +88,3 @@ def delete_org(app, org_name):
         remove_all_users_from_org(app, org)
     app.client.delete(org.key)
     return DELETED_ORG_MESSAGE.format(org['name'], app.user['name'])
-
-
-def retrieve_org(client, user, org_name):
-    orgs = check_owner_of_org(client, org_name, user)
-    if not orgs:
-        raise QuitError('You are not owner of an organization with the same name.')
-    return orgs[0]
