@@ -13,3 +13,9 @@ REMOVE_YOURSELF_FROM_ORG_MESSAGE = 'You cannot remove yourself from the organiza
 REMOVE_ORG_QUESTION_MESSAGE = 'There are users who are part of this organization. ' \
                               'Are you sure that you want to delete the organization?[yes/no]'
 ORG_NOT_DELETED_MESSAGE = 'The organization was not removed.' + ENTER_COMMAND_WITH_USER_MESSAGE
+ORG_NOT_FOUND_MESSAGE = 'Organization with {} was not found.' \
+                        + ENTER_COMMAND_WITH_USER_MESSAGE
+WRONG_ORG_PWD_MESSAGE = 'Wrong organization password.'
+ORG_PWD_MESSAGE = 'organization password: '
+ALL_ORGS_MESSAGE = 'You are a member of these organizations: '
+NO_ORGS_MESSAGE = 'You are not a member of any organizations.' + ENTER_COMMAND_WITH_USER_MESSAGE

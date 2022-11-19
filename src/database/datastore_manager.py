@@ -2,7 +2,7 @@ from .base import create_query
 
 
 def check_user_exists(client, username):
-    return create_query(client, 'User', {'username': username})
+    return create_query(client, 'User', {'name': username})
 
 
 def check_category_exists(client, category_name, user):
@@ -13,8 +13,8 @@ def retrieve_all_categories_by_user(client, user):
     return create_query(client, 'Category', {'owner': user.key})
 
 
-def retrieve_all_accounts_by_user(client, user):
-    return create_query(client, 'Account', {'owner': user.key})
+def retrieve_all_accounts_by_user(client, owner):
+    return create_query(client, 'Account', {'owner': owner.key})
 
 
 def check_account_exists(client, account_name, user):
@@ -22,8 +22,15 @@ def check_account_exists(client, account_name, user):
 
 
 def check_org_exist(client, org_name, user):
-    return create_query(client, 'Organization', {'users': user.key, 'org_name': org_name})
+    # TODO maybe change to User get by key and check orgs:org_name
+    if orgs := check_owner_of_org(client, org_name, user):
+        return orgs
+    return check_member_of_org(client, org_name, user)
+
+
+def check_member_of_org(client, org_name, user):
+    return create_query(client, 'Organization', {'users': user.key, 'name': org_name})
 
 
 def check_owner_of_org(client, org_name, user):
-    return create_query(client, 'Organization', {'owner': user.key, 'org_name': org_name})
+    return create_query(client, 'Organization', {'owner': user.key, 'name': org_name})

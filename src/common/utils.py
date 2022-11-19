@@ -1,6 +1,7 @@
 import tabulate
 from .account_consts import ACCOUNTS_ORDER, ACCOUNT_PROPERTIES
 from .category_consts import CATEGORY_PROPERTIES, CATEGORIES_ORDER
+from .consts import NOT_ENOUGH_ARGUMENTS_MESSAGE
 
 
 def visualize_accounts(owner_name, accounts):
@@ -37,3 +38,15 @@ def visualize_categories(categories):
     categories[0] = order
     rows = [dict(category) for category in categories]
     print(tabulate.tabulate(rows, CATEGORY_PROPERTIES))
+
+
+def check_arguments_size(commands, size=2):
+    if len(commands) < size:
+        raise ValueError(NOT_ENOUGH_ARGUMENTS_MESSAGE)
+
+
+def get_owner(app, org):
+    if org:
+        return org
+    else:
+        return app.user

@@ -75,18 +75,18 @@ def validate_password(password, skip_validation=False, can_be_empty=False):
     return password
 
 
-def populate_fields(app, entity_kind):
-    if entity_kind == 'Account':
-        return 'Account', 'account name', \
-               lambda value: check_account_exists(app.client, value, app.user)
+def populate_fields(app, entity_kind, owner_entity=None):
     if entity_kind == 'User':
         return 'User', 'username', lambda value: check_user_exists(app.client, value)
-    return 'Organization', 'organization name', \
-           lambda value: check_org_exist(app.client, value, app.user)
+    if entity_kind == 'Organization':
+        return 'Organization', 'organization name', \
+               lambda value: check_org_exist(app.client, value, app.user)
+    return 'Account', 'account name', \
+           lambda value: check_account_exists(app.client, value, owner_entity)
 
 
-def validate_entity_name(app, property_value, entity_kind, can_be_empty=False):
-    kind_name, property_name, check_entity_exists = populate_fields(app, entity_kind)
+def validate_entity_name(app, property_value, entity_kind, owner_entity=None, can_be_empty=False):
+    kind_name, property_name, check_entity_exists = populate_fields(app, entity_kind, owner_entity)
     tries_count = 0
     while tries_count < 3:
         property_value = validate_string_property(property_value, property_name, can_be_empty)
