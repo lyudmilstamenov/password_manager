@@ -1,65 +1,20 @@
-from .common.utils import check_arguments_size, get_owner
-from .app import App
-from .models.base_commands import visualize_help, clear
-from .models import user_manager
-from .models.account_manager import add_account, edit_account, \
+from ..models.base_commands import visualize_help, clear
+from ..models import user_manager
+from ..models.account_manager import add_account, edit_account, \
     delete_account, view_account, copy_password, \
     visualize_password, open_url, populate_org
-from .models.category_manager import delete_category, \
+from ..models.category_manager import delete_category, \
     view_all_accounts_by_category, view_all_categories
-from .models.org_manager import create_organization, \
+from ..models.org_manager import create_organization, \
     add_user_organization, remove_user_from_organization, delete_org, \
     view_org, view_all_orgs
-from .common.erros import StopError, QuitError
-from .common.account_consts import NO_LAST_ACCOUNT_MESSAGE
-from .common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, \
+from ..common.erros import StopError
+from ..common.account_consts import NO_LAST_ACCOUNT_MESSAGE
+from ..common.consts import HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, \
     NOT_ENOUGH_ARGUMENTS_MESSAGE, \
-    INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE, ONLY_LOGIN_MESSAGE, STOP_MESSAGE, \
-    ENTER_COMMAND_WITH_USER_MESSAGE, QUIT_MESSAGE, BASE_COMMANDS
-
-
-def console():
-    app = App()
-    key = app.client.key('User', 5632499082330112)
-    app.user = app.client.get(key)
-    print(HELP_MESSAGE)
-    input_message = LOGIN_OR_SIGNUP_MESSAGE
-    command = None
-    while command != 'STOP':
-        input_string = input(input_message)
-        input_list = input_string.split()
-        commands = [cmd.upper() for cmd in input_list[0:2]] + input_list[2:]
-        try:
-            input_message = handle_commands(app, commands)
-        except ValueError as exc:
-            input_message = str(exc) + \
-                            HELP_MESSAGE + \
-                            ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['name'])
-            continue
-        except StopError:
-            break
-        except QuitError as exc:
-            input_message = QUIT_MESSAGE + \
-                            str(exc) \
-                            + HELP_MESSAGE \
-                            + ENTER_COMMAND_WITH_USER_MESSAGE.format(
-                app.user['name'])
-
-    print(STOP_MESSAGE)
-
-
-def handle_commands(app, commands):
-    command = commands[0]
-    if command not in COMMANDS:
-        print(INVALID_COMMAND_MESSAGE + HELP_MESSAGE)
-        return '$: ' if not app.user \
-            else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['name'])
-    if command in BASE_COMMANDS:
-        return handle_base_commands(app, command)
-    if not app.user:
-        return login_or_signup(commands, app)
-
-    return handle_user_commands(commands, app)
+    INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE, ONLY_LOGIN_MESSAGE, \
+    ENTER_COMMAND_WITH_USER_MESSAGE
+from ..common.utils import check_arguments_size, get_owner
 
 
 def login_or_signup(commands, app):
@@ -156,7 +111,3 @@ def handle_base_commands(app, command):
         app.last_account = None
         return LOGIN_OR_SIGNUP_MESSAGE
     raise StopError()
-
-
-if __name__ == '__main__':
-    console()

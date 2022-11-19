@@ -37,7 +37,6 @@ def remove_account_from_category(app, category_name, account_key, owner):
 
 
 def delete_category(app, category_name, owner_entity):
-    print(owner_entity)
     categories = check_category_exists(app.client, category_name, owner_entity)
     if not categories:
         raise ValueError(CATEGORY_NOT_FOUND_MESSAGE.format(category_name))
@@ -59,8 +58,7 @@ def remove_all_accounts_from_category(app, category, owner):
         app.client.put(account)
 
 
-def view_all_accounts_by_category(app, category_name, org):
-    owner_entity = get_owner(app, org)
+def view_all_accounts_by_category(app, category_name, owner_entity):
     categories = check_category_exists(app.client, category_name, owner_entity)
     if not categories:
         raise ValueError(f'Category with category name {category_name} was not found.')

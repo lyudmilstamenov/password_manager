@@ -5,7 +5,7 @@ set-venv:
 
 .PHONY: run
 run:
-	conda activate pmenv && python -m src.console
+	conda activate pmenv && python -m src.main
 
 .PHONY: run-v
 run-v:

@@ -35,6 +35,7 @@ MODERATE_PASSWORD_MESSAGE = Fore.YELLOW + \
 STRONG_PASSWORD_MESSAGE = Fore.GREEN + \
                           'The password is strong. Security score: {}' + \
                           Fore.RESET
+BASE_ERROR_MESSAGE = '{}' + HELP_MESSAGE + ENTER_COMMAND_WITH_USER_MESSAGE
 
 KIND_EXISTS_MESSAGE = '{} with the same {} already exists. '
 KIND_EXISTS_EXCEEDS_ENTRIES_MESSAGE = KIND_EXISTS_MESSAGE + EXCEED_RETRIES_MESSAGE
