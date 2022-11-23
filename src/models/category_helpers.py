@@ -1,6 +1,6 @@
-from ..common.category_consts import CATEGORY_NOT_FOUND_MESSAGE
-from ..database.base import save_entity
-from ..database.datastore_manager import check_category_exists
+from src.common.category_consts import CATEGORY_NOT_FOUND_MESSAGE
+from src.database.base import save_entity
+from src.database.datastore_manager import check_category_exists
 
 
 def remove_all_accounts_from_category(app, category, owner):

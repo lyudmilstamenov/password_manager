@@ -1,14 +1,14 @@
 from getpass import getpass
 
-from ..common.account_consts import ACCOUNT_NAME_INPUT_MESSAGE, \
+from src.common.account_consts import ACCOUNT_NAME_INPUT_MESSAGE, \
     LOGIN_URL_INPUT_MESSAGE, CATEGORY_INPUT_MESSAGE, \
     APP_NAME_INPUT_MESSAGE, USERNAME_INPUT_MESSAGE, EMAIL_INPUT_MESSAGE, \
     NOTES_INPUT_MESSAGE, PWD_INPUT_MESSAGE, \
     ACCOUNT_EXISTS_MESSAGE, ACCOUNT_NOT_FOUND_MESSAGE
-from ..database.datastore_manager import check_account_exists
-from ..security.cryptography import encrypt, decrypt
+from src.database.datastore_manager import check_account_exists
+from src.security.cryptography import encrypt, decrypt
 from .category_manager import update_category
-from ..security.validation import validate_string_property, validate_email, \
+from src.security.validation import validate_string_property, validate_email, \
     validate_url, validate_password, validate_entity_name
 
 

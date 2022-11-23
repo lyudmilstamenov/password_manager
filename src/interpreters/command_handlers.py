@@ -3,7 +3,7 @@ from getpass import getpass
 from ..common.org_consts import ORG_NOT_FOUND_MESSAGE, WRONG_ORG_PWD_MESSAGE, ORG_PWD_MESSAGE
 from ..database.datastore_manager import check_org_exist
 from ..security.cryptography import check_password
-from ..models.base_commands import visualize_help, clear
+from ..models.base_commands import visualize_help, clear, generate_pwd
 from ..models import user_manager
 from ..models.account_manager import add_account, edit_account, \
     delete_account, view_account, copy_password, \
@@ -18,7 +18,7 @@ from ..common.account_consts import NO_LAST_ACCOUNT_MESSAGE
 from ..common.consts import HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, \
     NOT_ENOUGH_ARGUMENTS_MESSAGE, \
     INVALID_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE, ONLY_LOGIN_MESSAGE, \
-    ENTER_COMMAND_WITH_USER_MESSAGE
+    ENTER_COMMAND_WITH_USER_MESSAGE, GENERATE_PWD_MESSAGE
 from ..common.utils import check_arguments_size, get_owner
 
 
@@ -102,20 +102,24 @@ def handle_org_commands(commands, app):
     raise ValueError(INVALID_ARGUMENTS_MESSAGE)
 
 
-def handle_base_commands(app, command):
-    if command == 'CLEAR':
+def handle_base_commands(app, commands):
+    if commands[0] == 'CLEAR':
         clear()
         return '$: ' if not app.user \
             else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['name'])
-    if command == 'HELP':
+    if commands[0] == 'HELP':
         visualize_help()
         return '$: ' if not app.user \
             else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['name'])
-    if command == 'LOGOUT':
+    if commands[0] == 'LOGOUT':
         app.user = None
         app.last_account = None
         return LOGIN_OR_SIGNUP_MESSAGE
-    raise StopError()
+    if commands[0] == 'STOP':
+        raise StopError()
+    if commands[0] == 'GEN':
+        return GENERATE_PWD_MESSAGE.format(generate_pwd(app,commands[1:]), '' if not app.user else app.user['name'])
+    raise QuitError(INVALID_COMMAND_MESSAGE)
 
 
 def populate_org(app, commands):

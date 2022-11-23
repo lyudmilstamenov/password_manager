@@ -18,3 +18,12 @@ lint:
 .PHONY: test
 test:
 	conda activate pmenv && python -m pytest test/
+
+.PHONY: test-coverage
+test-coverage:
+	conda activate pmenv && coverage run -m pytest test/ && coverage report
+
+
+.PHONY: utest
+utest:
+	conda activate pmenv && python -m unittest test_account_manager #coverage run -m unittest

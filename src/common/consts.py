@@ -2,7 +2,7 @@ from collections import OrderedDict
 
 from colorama import Fore
 
-BASE_COMMANDS = ['HELP', 'STOP', 'CLEAR', 'LOGOUT']
+BASE_COMMANDS = ['HELP', 'STOP', 'CLEAR', 'LOGOUT', 'GEN']
 LOGIN_OR_SIGNUP = ['LOGIN', 'SIGNUP']
 USER_COMMANDS = ['ACCOUNT', 'ORG', 'CATEGORY']
 COMMANDS = BASE_COMMANDS + LOGIN_OR_SIGNUP + USER_COMMANDS
@@ -57,11 +57,19 @@ EMAIL_VALIDATION_ERROR_MESSAGE = 'Invalid email. Enter a valid value or ' \
 URL_VALIDATION_ERROR_MESSAGE = 'Invalid url. Enter a valid value or ' \
                                'enter "exit" to quit the current state of the ' \
                                'programme. '
+GENERATE_PWD_MESSAGE = 'Password: {}' + ENTER_COMMAND_WITH_USER_MESSAGE
+
+EMPTY_COMMAND_MESSAGE = 'You need to enter a command.'
+INVALID_PWD_LEN_MESSAGE = 'The length of the password must be a positive number.'
 
 HELP_INFO_LIST = [
     {'command': 'help', 'info': 'This command prints out this information.'},
     {'command': 'stop', 'info': 'This command stops the execution of the problem.'},
     {'command': 'clear', 'info': 'This command clears the console.'},
+    {'command': 'gen [<password_length>]',
+     'info': 'This command generates a random password. '
+             'If do not set the length of the password, by default it will be 8. '
+             '<password_length> must be a positive integer.'},
     {'command': 'login',
      'info': 'This command shows the login prompt.'},
     {'command': 'signup',

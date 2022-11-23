@@ -12,6 +12,7 @@ dependencies:
   - pycryptodome
   - pytest
   - pytest-mock
+  - coverage
 #  - libsodium
   - pip
   - pip:
