@@ -1,12 +1,12 @@
 from getpass import getpass
 
-from ..common.account_consts import PWD_INPUT_MESSAGE
-from ..common.erros import QuitError
-from ..common.org_consts import NOT_OWNER_OF_ORG_MESSAGE
-from ..database.base import save_entity
-from ..database.datastore_manager import check_user_exists, check_owner_of_org
-from ..security.cryptography import get_hashed_password
-from ..security.validation import validate_entity_name, validate_password
+from src.common.account_consts import PWD_INPUT_MESSAGE
+from src.common.erros import QuitError
+from src.common.org_consts import NOT_OWNER_OF_ORG_MESSAGE
+from src.database.base import save_entity
+from src.database.datastore_manager import check_user_exists, check_owner_of_org
+from src.security.cryptography import get_hashed_password
+from src.security.validation import validate_entity_name, validate_password
 
 
 def init_org_info(app, users):

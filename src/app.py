@@ -11,7 +11,7 @@ class App:
     def __init__(self):
         self.__user = None
         os.environ["GOOGLE_APPLICATION_CREDENTIALS"] \
-            = 'E:/Hobbies/coding/personal_projects/password_function/credentials.json'
+            = "E:/FMI/4 year/7 term/Python/project/credentials.json"
 
         self.__client = datastore.Client()
         self.__last_account = None
