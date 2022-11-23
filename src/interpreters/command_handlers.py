@@ -23,11 +23,11 @@ from ..common.utils import check_arguments_size, get_owner
 
 
 def login_or_signup(commands, app):
-    if commands[0] == 'LOGIN':
-        return user_manager.login(app)
-    if commands[0] == 'SIGNUP':
-        return user_manager.signup(app)
-    return ONLY_LOGIN_MESSAGE + HELP_MESSAGE + '\n$'
+    handlers = {
+        'LOGIN': lambda: user_manager.login(app),
+        'SIGNUP': lambda: user_manager.signup(app),
+    }
+    return handlers.get(commands[0], lambda: ONLY_LOGIN_MESSAGE + HELP_MESSAGE + '\n$ ')()
 
 
 def handle_category_commands(commands, app):
@@ -44,12 +44,13 @@ def handle_category_commands(commands, app):
 
 def handle_user_commands(commands, app):
     check_arguments_size(commands)
-    if commands[0] == 'ACCOUNT':
-        return handle_account_commands(commands[1:], app)
-    if commands[0] == 'ORG':
-        return handle_org_commands(commands[1:], app)
-    if commands[0] == 'CATEGORY':
-        return handle_category_commands(commands[1:], app)
+    handlers = {
+        'ACCOUNT': lambda: handle_account_commands(commands[1:], app),
+        'ORG': lambda: handle_org_commands(commands[1:], app),
+        'CATEGORY': lambda: handle_category_commands(commands[1:], app)
+    }
+    if commands[0] in handlers:
+        return handlers[commands[0]]()
     raise ValueError(INVALID_COMMAND_MESSAGE)
 
 
@@ -59,13 +60,12 @@ def handle_account_commands(commands, app):
     if commands[0] == 'ADD':
         return add_account(app, owner_entity)
     check_arguments_size(commands)
-    if commands[0] == 'CAT':
-        return view_all_accounts_by_category(app, commands[1], owner_entity)
-    if commands[0] == 'EDIT':
-        return edit_account(app, commands[1], owner_entity)
-    if commands[0] == '-RM':
-        return delete_account(app, commands[1], owner_entity)
-    return handle_account_view_commands(commands, app, owner_entity)
+    handlers = {
+        'CAT': lambda: view_all_accounts_by_category(app, commands[1], owner_entity),
+        'EDIT': lambda: edit_account(app, commands[1], owner_entity),
+        '-RM': lambda: delete_account(app, commands[1], owner_entity),
+    }
+    return handlers.get(commands[0], lambda: handle_account_view_commands(commands, app, owner_entity))()
 
 
 def handle_account_view_commands(commands, app, owner_entity):
@@ -73,14 +73,14 @@ def handle_account_view_commands(commands, app, owner_entity):
         raise ValueError(NO_LAST_ACCOUNT_MESSAGE)
     if commands[1] == '-last':
         commands[1] = app.last_account['account_name']
-    if commands[0] == 'VIEW':
-        return view_account(app, commands[1], owner_entity)
-    if commands[0] == 'COPY-PWD':
-        return copy_password(app, commands[1], owner_entity)
-    if commands[0] == 'PWD':
-        return visualize_password(app, commands[1], owner_entity)
-    if commands[0] == 'URL':
-        return open_url(app, commands[1], owner_entity)
+    handlers = {
+        'VIEW': lambda: view_account(app, commands[1], owner_entity),
+        'COPY-PWD': lambda: copy_password(app, commands[1], owner_entity),
+        'PWD': lambda: visualize_password(app, commands[1], owner_entity),
+        'URL': lambda: open_url(app, commands[1], owner_entity),
+    }
+    if commands[0] in handlers:
+        return handlers[commands[0]]()
     raise ValueError(INVALID_ARGUMENTS_MESSAGE)
 
 
@@ -118,7 +118,7 @@ def handle_base_commands(app, commands):
     if commands[0] == 'STOP':
         raise StopError()
     if commands[0] == 'GEN':
-        return GENERATE_PWD_MESSAGE.format(generate_pwd(app,commands[1:]), '' if not app.user else app.user['name'])
+        return GENERATE_PWD_MESSAGE.format(generate_pwd(app, commands[1:]), '' if not app.user else app.user['name'])
     raise QuitError(INVALID_COMMAND_MESSAGE)
 
 
