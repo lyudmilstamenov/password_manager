@@ -1,3 +1,6 @@
+"""
+Provides helper functions for modifying categories.
+"""
 from src.common.category_consts import CATEGORY_NOT_FOUND_MESSAGE
 from src.database.base import save_entity
 from src.database.datastore_manager import check_category_exists

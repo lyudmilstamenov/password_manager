@@ -1,3 +1,6 @@
+"""
+Provides the functionalities of the base commands.
+"""
 from os import name, system
 from password_generator import PasswordGenerator
 

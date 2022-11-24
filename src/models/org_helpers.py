@@ -1,3 +1,6 @@
+"""
+Provides helper functions for modifying organizations.
+"""
 from getpass import getpass
 
 from src.common.account_consts import PWD_INPUT_MESSAGE

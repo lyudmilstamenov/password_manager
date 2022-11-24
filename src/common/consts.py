@@ -132,6 +132,9 @@ HELP_INFO_LIST = [
     {'command': 'org remove <org_name> <username>',
      'info': 'This command removes user with username '
              '<username> from the organization <org_name>.'},
+    {'command': 'org view <org_name>',
+     'info': 'This command visualizes the non-sensitive '
+             'information of the organization.'},
 ]
 HELP_TABLE_PROPERTIES = {'command': 'Commands',
                          'info': 'Information', }

@@ -1,3 +1,6 @@
+"""
+Provides basic functions used in different modules.
+"""
 import tabulate
 from .account_consts import ACCOUNTS_ORDER, ACCOUNT_PROPERTIES
 from .category_consts import CATEGORY_PROPERTIES, CATEGORIES_ORDER
@@ -5,6 +8,12 @@ from .consts import NOT_ENOUGH_ARGUMENTS_MESSAGE
 
 
 def visualize_accounts(owner_name, accounts):
+    """
+    Visualizes the information of the accounts
+    :param owner_name: the name of the owner entity of the accounts
+    :param accounts:
+    :return:
+    """
     if not accounts:
         print('No accounts were found.')
         return
@@ -16,7 +25,12 @@ def visualize_accounts(owner_name, accounts):
 
 
 def visualize_org(org):
-    print('Organization name: ' + org['org_name'])
+    """
+    Visualizes the information of the organization
+    :param org:
+    :return:
+    """
+    print('Organization name: ' + org['name'])
     print('Owner name: ' + org['owner'])
     print('Members: ' + ', '.join(org['users']))
 

@@ -1,3 +1,6 @@
+"""
+Provides helper functions for modifying accounts.
+"""
 from getpass import getpass
 
 from src.common.account_consts import ACCOUNT_NAME_INPUT_MESSAGE, \

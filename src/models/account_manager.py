@@ -1,3 +1,6 @@
+"""
+Provides functionalities for modifying accounts.
+"""
 import webbrowser
 import pyperclip
 from validators import url as url_validator

@@ -1,3 +1,6 @@
+"""
+Provides functionalities for modifying organizations.
+"""
 from google.cloud import datastore
 
 from .org_helpers import init_org_info, drop_sensitive_info_from_org, \
@@ -8,7 +11,7 @@ from ..common.erros import QuitError
 from ..common.org_consts import USERS_NOT_FOUND_MESSAGE, \
     SUCCESSFULLY_CREATED_ORG_MESSAGE, DELETED_ORG_MESSAGE, \
     ADDED_USER_TO_ORG_MESSAGE, REMOVED_USER_FROM_ORG_MESSAGE, REMOVE_YOURSELF_FROM_ORG_MESSAGE, \
-    ORG_NOT_DELETED_MESSAGE, REMOVE_ORG_QUESTION_MESSAGE, NO_ORGS_MESSAGE, ALL_ORGS_MESSAGE
+    ORG_NOT_DELETED_MESSAGE, REMOVE_ORG_QUESTION_MESSAGE, NO_ORGS_MESSAGE, ALL_ORGS_MESSAGE, ALREADY_MEMBER_MESSAGE
 from ..common.utils import visualize_org
 from ..database.base import save_entity
 from ..database.datastore_manager import check_user_exists
@@ -40,6 +43,8 @@ def add_user_to_organization(app, org_name, username):
 
     if not users:
         raise ValueError(USER_NOT_FOUND_MESSAGE.format(username))
+    if org['owner'] == users[0].key or users[0].key in org['users']:
+        raise QuitError(ALREADY_MEMBER_MESSAGE.format(username))
     org_info['users'].append(users[0].key)
     add_org_to_user(app.client, users[0], org)
     save_entity(app.client, org, org_info)

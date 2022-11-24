@@ -1,3 +1,6 @@
+"""
+Provides functionalities for modifying categories.
+"""
 from google.cloud import datastore
 
 from src.common.category_consts import CATEGORY_NOT_FOUND_MESSAGE, DELETED_CATEGORY_MESSAGE, \
