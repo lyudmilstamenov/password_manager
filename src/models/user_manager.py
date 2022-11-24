@@ -1,3 +1,6 @@
+"""
+Provides method getpass which takes string from the input and hides the characters o the console.
+"""
 import getpass
 import time
 from google.cloud import datastore
@@ -13,6 +16,12 @@ from ..security.cryptography import get_hashed_password, check_password
 
 
 def signup(app):
+    """
+    Creates a new User entity with name, password and email.
+    The name must be unique or it will raise ValueError.
+    :param app: App(contains the information about the current state of the programme)
+    :return: message for successful sign up
+    """
     username = validate_entity_name(app, input('username: '), entity_kind='User')
     user_info = {'name': username,
                  'email': validate_email(input('email: ')),
@@ -27,6 +36,12 @@ def signup(app):
 
 
 def login(app):
+    """
+    Validates the password of a user with name equal to username and
+    sets app.user to this user.
+    :param app: App(contains the information about the current state of the programme)
+    :return: message for successful log in
+    """
     username = input('username: ')
     users = check_user_exists(app.client, username)
     if not users:

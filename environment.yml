@@ -13,11 +13,13 @@ dependencies:
   - pytest
   - pytest-mock
   - coverage
+  - pyreadline3
 #  - libsodium
   - pip
   - pip:
     - google-cloud-datastore
     - pyperclip
     - password-strength
+    - random-password-generator
 #    - scrypt
 #    - pysodium

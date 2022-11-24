@@ -1,3 +1,7 @@
+"""
+App saves the current state of the programme
+"""
+
 import os
 from google.cloud import datastore
 
@@ -18,14 +22,26 @@ class App:
 
     @property
     def user(self):
+        """
+        Retrieves the current user
+        :return: User
+        """
         return self.__user
 
     @property
     def client(self):
+        """
+        Retrieves the Google Datastore client
+        :return:
+        """
         return self.__client
 
     @property
     def last_account(self):
+        """
+        Retrieves the most recently used account
+        :return: Account
+        """
         return self.__last_account
 
     @user.setter

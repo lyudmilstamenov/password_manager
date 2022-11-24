@@ -30,7 +30,7 @@ def add_account(app, owner_entity):
 def edit_account(app, account_name, owner_entity):
     account = retrieve_account_by_account_name(app, account_name, owner_entity)
     print(UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE)
-    account_info = update_account_info(app, account_name, owner_entity)
+    account_info = update_account_info(app, account, owner_entity)
     save_entity(app.client, account, account_info)
     app.last_account = account
     return UPDATED_ACCOUNT_MESSAGE.format(account_info['account_name'], app.user['name'])

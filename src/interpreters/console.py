@@ -1,13 +1,16 @@
+from google.cloud.datastore import Key
+
 from ..app import App
 from ..common.erros import StopError, QuitError
 
 from ..common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, INVALID_COMMAND_MESSAGE, STOP_MESSAGE, \
-    ENTER_COMMAND_WITH_USER_MESSAGE, QUIT_MESSAGE, BASE_COMMANDS, BASE_ERROR_MESSAGE, EMPTY_COMMAND_MESSAGE
+    QUIT_MESSAGE, BASE_COMMANDS, BASE_ERROR_MESSAGE, EMPTY_COMMAND_MESSAGE
 from .command_handlers import handle_base_commands, login_or_signup, handle_user_commands
 
 
 def run():
     app = App()
+    app.user = app.client.get(app.client.key('User', 5644004762845184))
     print(HELP_MESSAGE)
     input_message = LOGIN_OR_SIGNUP_MESSAGE
     command = None
@@ -30,9 +33,7 @@ def handle_commands(app, commands):
         raise ValueError(EMPTY_COMMAND_MESSAGE)
     command = commands[0]
     if command not in COMMANDS:
-        print(INVALID_COMMAND_MESSAGE + HELP_MESSAGE)
-        return '$: ' if not app.user \
-            else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['name'])
+        raise ValueError(INVALID_COMMAND_MESSAGE)
     if command in BASE_COMMANDS:
         return handle_base_commands(app, commands)
     if not app.user:

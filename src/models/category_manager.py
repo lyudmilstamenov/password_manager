@@ -1,13 +1,13 @@
 from google.cloud import datastore
 
-from .category_helpers import remove_all_accounts_from_category, remove_account_from_category, \
-    drop_sensitive_info_from_category
 from src.common.category_consts import CATEGORY_NOT_FOUND_MESSAGE, DELETED_CATEGORY_MESSAGE, \
     REMOVE_CATEGORY_QUESTION_MESSAGE, CATEGORY_NOT_DELETED_MESSAGE
 from src.common.consts import ENTER_COMMAND_WITH_USER_MESSAGE
 from src.common.utils import visualize_accounts, visualize_categories
 from src.database.datastore_manager import retrieve_all_categories_by_user, check_category_exists
 from src.database.base import save_entity
+from .category_helpers import remove_all_accounts_from_category, remove_account_from_category, \
+    drop_sensitive_info_from_category
 
 
 def add_account_to_category(app, category_name, account_key, owner_entity):
@@ -48,6 +48,7 @@ def view_all_accounts_by_category(app, category_name, owner_entity):
     for account_key in category['accounts']:
         accounts.append(app.client.get(account_key))
     visualize_accounts(app.user['name'], accounts)
+    return ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['name'])
 
 
 def view_all_categories(app, owner_entity):
@@ -61,12 +62,20 @@ def view_all_categories(app, owner_entity):
 
 
 def update_category(app, old_category_name, new_category_name, account_key, owner_entity):
+    """
+    Deletes the account from the old category and enters it in the new one.
+    :param app: App(saves the current state of the programme)
+    :param old_category_name:
+    :param new_category_name:
+    :param account_key: the key of the account which will be transferred
+     from one to another category
+    :param owner_entity:
+    :return:
+    """
     if new_category_name == old_category_name:
         return
     if old_category_name:
         remove_account_from_category(app, old_category_name, account_key, owner_entity)
 
-    if new_category_name == '-del':
-        add_account_to_category(app, '', account_key, owner_entity)
-    else:
+    if new_category_name != '-del':
         add_account_to_category(app, new_category_name, account_key, owner_entity)

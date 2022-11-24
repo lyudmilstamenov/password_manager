@@ -5,6 +5,7 @@ from unittest import mock
 import pytest
 
 import src.models
+from helper import check_exception_message
 from src.common.consts import INVALID_PWD_LEN_MESSAGE, INVALID_ARGUMENTS_MESSAGE
 from src.app import App
 from io import StringIO
@@ -58,13 +59,12 @@ class TestBaseCommands():
 
     def test_generate_pwd__with_invalid_len_str(self):
         app = App()
-        with pytest.raises(ValueError) as exc:
-            generate_pwd(app, ['not_digit'])
-            INVALID_ARGUMENTS_MESSAGE == str(exc.value)
+        check_exception_message(lambda: generate_pwd(app, ['not_digit']), ValueError,
+                                INVALID_ARGUMENTS_MESSAGE)
 
     def test_help(self):
-        capturedOutput = StringIO()  # Create StringIO object
-        sys.stdout = capturedOutput  # and redirect stdout.
+        captured_output = StringIO()  # Create StringIO object
+        sys.stdout = captured_output  # and redirect stdout.
         visualize_help()
         sys.stdout = sys.__stdout__  # Reset redirect.
-        assert capturedOutput.getvalue() is not None
+        assert captured_output.getvalue() is not None

@@ -1,9 +1,9 @@
 import pytest
 
+from helper import check_exception_message
 from src.app import App
 from src.models.account_helpers import retrieve_account_by_account_name, retrieve_account_password, \
     update_account_info, populate_account_info
-
 
 
 class TestAccountHelpers:
@@ -31,9 +31,8 @@ class TestAccountHelpers:
     def test_retrieve_account_by_account_name__throws_value_error(self, mocker):
         app = App()
         mocker.patch('src.models.account_helpers.check_account_exists', return_value=None)
-        with pytest.raises(ValueError) as exc:
-            retrieve_account_by_account_name(app, 'name', None)
-            'Account with account name name was not found.' == str(exc.value)
+        check_exception_message(lambda: retrieve_account_by_account_name(app, 'name', None), ValueError,
+                                'Account with account name name was not found.')
 
     def test_retrieve_account_password(self, mocker):
         mocker.patch('src.models.account_helpers.retrieve_account_by_account_name', return_value={'password': 'pwd2'})
@@ -62,8 +61,8 @@ class TestAccountHelpers:
         mocker.patch('src.models.account_helpers.validate_url', return_value='url')
         mocker.patch('src.models.account_helpers.validate_email', return_value='em@gmail.com')
         mocker.patch('src.models.account_helpers.validate_password', return_value='strong_pwd')
-        mocker.patch('src.models.account_helpers.input', return_value= next(inputs))
-        mocker.patch('src.models.account_helpers.getpass', return_value= next(inputs))
+        mocker.patch('src.models.account_helpers.input', return_value=next(inputs))
+        mocker.patch('src.models.account_helpers.getpass', return_value=next(inputs))
         assert populate_account_info(App(), None) == {'account_name': 'account name',
                                                       'app_name': 'str',
                                                       'category': 'str',

@@ -1,3 +1,6 @@
+"""
+Contains the consts used in org_handlers.py and org_helpers.py
+"""
 from .consts import ENTER_COMMAND_WITH_USER_MESSAGE
 
 USERS_NOT_FOUND_MESSAGE = 'The following users {} were not found.'

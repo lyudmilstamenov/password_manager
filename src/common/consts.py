@@ -1,5 +1,7 @@
+"""
+Contains consts used in all files.
+"""
 from collections import OrderedDict
-
 from colorama import Fore
 
 BASE_COMMANDS = ['HELP', 'STOP', 'CLEAR', 'LOGOUT', 'GEN']
@@ -60,7 +62,8 @@ URL_VALIDATION_ERROR_MESSAGE = 'Invalid url. Enter a valid value or ' \
 GENERATE_PWD_MESSAGE = 'Password: {}' + ENTER_COMMAND_WITH_USER_MESSAGE
 
 EMPTY_COMMAND_MESSAGE = 'You need to enter a command.'
-INVALID_PWD_LEN_MESSAGE = 'The length of the password must be a positive number.'
+INVALID_PWD_LEN_MESSAGE = 'The length of the password must be >=4.'
+TOO_LARGE_PWD_LEN_MESSAGE = 'The length of the password must be <=150.'
 
 HELP_INFO_LIST = [
     {'command': 'help', 'info': 'This command prints out this information.'},
@@ -68,7 +71,7 @@ HELP_INFO_LIST = [
     {'command': 'clear', 'info': 'This command clears the console.'},
     {'command': 'gen [<password_length>]',
      'info': 'This command generates a random password. '
-             'If do not set the length of the password, by default it will be 8. '
+             'If do not set the length of the password, by default it will be 8.\n'
              '<password_length> must be a positive integer.'},
     {'command': 'login',
      'info': 'This command shows the login prompt.'},
@@ -78,7 +81,8 @@ HELP_INFO_LIST = [
      'info': 'This command creates a new account.'},
     {'command': 'account [-o <org_name>] edit <account_name>',
      'info': 'This command updates the information of the account. When editing a field, '
-             'set it to "-del" in order to make it empty.'},
+             'set it to "-del" in order to make it empty.\n'
+             'You cannot delete the password with "-del".'},
     {'command': 'account [-o <org_name>] -rm <account_name>',
      'info': 'This command deletes the account.'},
     {'command': 'account [-o <org_name>] url <account_name>',
@@ -97,10 +101,13 @@ HELP_INFO_LIST = [
     {'command': 'account [-o <org_name>] pwd <account_name>',
      'info': 'This command shows the password of '
              'the account on the console.\n' + CLEAR_MESSAGE},
-    {'command': 'category [-o <org_name>] -all <category_name>',
+    {'command': 'account [-o <org_name>] cat <org_name>',
      'info': 'This command shows the non-sensitive '
-             'information of all accounts who are owned '
+             'information of all accounts \nwho are owned '
              'by the current user and are from this category.'},
+    {'command': 'category [-o <org_name>] -all',
+     'info': 'This command shows all categories who are owned '
+             'by the current user.'},
     {'command': 'category [-o <org_name>] -rm <category_name',
      'info': 'This command deletes the category '
              'and for every account from the category the '

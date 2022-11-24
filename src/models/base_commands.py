@@ -1,12 +1,10 @@
-import string
-import time
 from os import name, system
-import random
+from password_generator import PasswordGenerator
 
 import tabulate
 
 from ..common.consts import HELP_TABLE_ORDER, HELP_TABLE_PROPERTIES, HELP_INFO_LIST, \
-    INVALID_ARGUMENTS_MESSAGE, INVALID_PWD_LEN_MESSAGE
+    INVALID_ARGUMENTS_MESSAGE, INVALID_PWD_LEN_MESSAGE, TOO_LARGE_PWD_LEN_MESSAGE
 
 
 def visualize_help():
@@ -19,21 +17,20 @@ def visualize_help():
 
 
 def clear():
-    # for windows
-    if name == 'nt':
-        _ = system('cls')
-    # for mac and linux(here, os.name is 'posix')
-    else:
-        _ = system('clear')
+    system('cls' if name == 'nt' else 'clear')
 
 
-def generate_pwd(app, commands):
+def generate_pwd(commands):
     try:
         length = 8 if not commands else int(commands[0])
     except Exception as exc:
         raise ValueError(INVALID_ARGUMENTS_MESSAGE) from exc
-    if length <= 0:
+    if length < 4:
         raise ValueError(INVALID_PWD_LEN_MESSAGE)
-    random.seed(time.time() * 1000)
-    all_symbols = string.ascii_letters + string.digits + string.punctuation
-    return "".join(random.sample(all_symbols, length))
+    if length > 150:
+        raise ValueError(TOO_LARGE_PWD_LEN_MESSAGE)
+
+    pwd_generator = PasswordGenerator()
+    pwd_generator.minlen = length
+    pwd_generator.maxlen = length
+    return pwd_generator.generate()

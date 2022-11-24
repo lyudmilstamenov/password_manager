@@ -1,3 +1,6 @@
+"""
+Contains the consts used in category_handlers.py and category_helpers.py
+"""
 from collections import OrderedDict
 
 from .consts import ENTER_COMMAND_WITH_USER_MESSAGE

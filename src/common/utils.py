@@ -6,7 +6,7 @@ from .consts import NOT_ENOUGH_ARGUMENTS_MESSAGE
 
 def visualize_accounts(owner_name, accounts):
     if not accounts:
-        print('No account were found.')
+        print('No accounts were found.')
         return
     order = ACCOUNTS_ORDER.copy()
     order.update(accounts[0])
@@ -49,4 +49,3 @@ def get_owner(app, org):
     if org:
         return org
     return app.user
-

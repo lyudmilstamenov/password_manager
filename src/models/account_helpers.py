@@ -4,12 +4,12 @@ from src.common.account_consts import ACCOUNT_NAME_INPUT_MESSAGE, \
     LOGIN_URL_INPUT_MESSAGE, CATEGORY_INPUT_MESSAGE, \
     APP_NAME_INPUT_MESSAGE, USERNAME_INPUT_MESSAGE, EMAIL_INPUT_MESSAGE, \
     NOTES_INPUT_MESSAGE, PWD_INPUT_MESSAGE, \
-    ACCOUNT_EXISTS_MESSAGE, ACCOUNT_NOT_FOUND_MESSAGE
+    ACCOUNT_EXISTS_MESSAGE, ACCOUNT_NOT_FOUND_MESSAGE, DELETE_PWD_MESSAGE
 from src.database.datastore_manager import check_account_exists
 from src.security.cryptography import encrypt, decrypt
-from .category_manager import update_category
 from src.security.validation import validate_string_property, validate_email, \
     validate_url, validate_password, validate_entity_name
+from .category_manager import update_category
 
 
 def init_account_info(app, owner_entity):
@@ -24,6 +24,8 @@ def init_account_info(app, owner_entity):
 def update_account_info(app, account, owner_entity):
     account_info = dict(account)
     new_account_info = populate_account_info(app, owner_entity, True)
+    if new_account_info['password'] == '-del':
+        raise ValueError(DELETE_PWD_MESSAGE)
     if new_account_info['category']:
         update_category(app, account_info['category'],
                         new_account_info['category'], account.key, owner_entity)

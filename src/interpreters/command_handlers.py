@@ -118,7 +118,7 @@ def handle_base_commands(app, commands):
     if commands[0] == 'STOP':
         raise StopError()
     if commands[0] == 'GEN':
-        return GENERATE_PWD_MESSAGE.format(generate_pwd(app, commands[1:]), '' if not app.user else app.user['name'])
+        return GENERATE_PWD_MESSAGE.format(generate_pwd(commands[1:]), '' if not app.user else app.user['name'])
     raise QuitError(INVALID_COMMAND_MESSAGE)
 
 

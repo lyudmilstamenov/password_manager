@@ -1,3 +1,6 @@
+"""
+Contains the consts used in account_handlers.py and account_helpers.py
+"""
 from collections import OrderedDict
 
 from .consts import ENTER_COMMAND_WITH_USER_MESSAGE
@@ -22,6 +25,7 @@ INVALID_PASSWORD_MESSAGE = 'Invalid password. The password should contain ' \
                            '1 digits and 1 special characters. '
 URL_OPENED_MESSAGE = 'The login page was successfully opened.' + ENTER_COMMAND_WITH_USER_MESSAGE
 URL_NOT_VALID_MESSAGE = 'The login url is invalid.' + ENTER_COMMAND_WITH_USER_MESSAGE
+DELETE_PWD_MESSAGE='You cannot delete the password. You can only change it.'
 
 ACCOUNT_NAME_INPUT_MESSAGE = 'account name (This name must be unique per account.): '
 APP_NAME_INPUT_MESSAGE = 'app name []: '
