@@ -1,6 +1,9 @@
 """
 Provides basic functionalities for work with the datastore
 """
+from google.cloud import datastore
+
+
 def create_query(client, kind, filters):
     """
     Fetches all entities which pass the filters
@@ -25,3 +28,7 @@ def save_entity(client, entity, entity_info: dict):
     """
     entity.update(entity_info)
     client.put(entity)
+
+
+def create_entity(app, kind):
+    return datastore.Entity(app.client.key(kind))

@@ -14,11 +14,14 @@ class App:
 
     def __init__(self):
         self.__user = None
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] \
-            = "E:/FMI/4 year/7 term/Python/project/credentials.json"
-
+        # dotenv.load_dotenv()  # exports contents of a `.env` file in the curr dir as environmental variables
+        # API_KEY = os.getenv("API_KEY")
+        # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] \
+        #     = "../credentials.json"
+        print(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
         self.__client = datastore.Client()
-        self.__last_account = None
+        self.__last_accounts = {}
+        self.__last_org = None
 
     @property
     def user(self):
@@ -37,18 +40,31 @@ class App:
         return self.__client
 
     @property
-    def last_account(self):
+    def last_org(self):
+        """
+        Retrieves the most recently used organization
+        :return: Organization
+        """
+        return self.__last_org
+
+    @property
+    def last_accounts(self):
         """
         Retrieves the most recently used account
         :return: Account
         """
-        return self.__last_account
+        return self.__last_accounts
 
     @user.setter
     def user(self, user):
         self.__user = user
-        self.__last_account = None
+        self.__last_accounts = {}
+        self.__last_org = None
 
-    @last_account.setter
-    def last_account(self, last_account):
-        self.__last_account = last_account
+    @last_org.setter
+    def last_org(self, last_org):
+        self.__last_org = last_org
+
+    @last_accounts.setter
+    def last_accounts(self, last_accounts):
+        self.__last_accounts = last_accounts

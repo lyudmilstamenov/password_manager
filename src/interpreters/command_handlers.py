@@ -1,6 +1,6 @@
 from getpass import getpass
 
-from ..common.org_consts import ORG_NOT_FOUND_MESSAGE, WRONG_ORG_PWD_MESSAGE, ORG_PWD_MESSAGE
+from ..common.org_consts import ORG_NOT_FOUND_MESSAGE, WRONG_ORG_PWD_MESSAGE, ORG_PWD_MESSAGE, NO_LAST_ORG_MESSAGE
 from ..database.datastore_manager import check_org_exist
 from ..security.cryptography import check_password
 from ..models.base_commands import visualize_help, clear, generate_pwd
@@ -69,15 +69,12 @@ def handle_account_commands(commands, app):
 
 
 def handle_account_view_commands(commands, app, owner_entity):
-    if commands[1] == '-last' and not app.last_account:
-        raise ValueError(NO_LAST_ACCOUNT_MESSAGE)
-    if commands[1] == '-last':
-        commands[1] = app.last_account['account_name']
+    account_name = extract_account_name(app, commands[1], owner_entity)
     handlers = {
-        'VIEW': lambda: view_account(app, commands[1], owner_entity),
-        'COPY-PWD': lambda: copy_password(app, commands[1], owner_entity),
-        'PWD': lambda: visualize_password(app, commands[1], owner_entity),
-        'URL': lambda: open_url(app, commands[1], owner_entity),
+        'VIEW': lambda: view_account(app, account_name, owner_entity),
+        'COPY-PWD': lambda: copy_password(app, account_name, owner_entity),
+        'PWD': lambda: visualize_password(app, account_name, owner_entity),
+        'URL': lambda: open_url(app, account_name, owner_entity),
     }
     if commands[0] in handlers:
         return handlers[commands[0]]()
@@ -113,7 +110,6 @@ def handle_base_commands(app, commands):
             else ENTER_COMMAND_WITH_USER_MESSAGE.format(app.user['name'])
     if commands[0] == 'LOGOUT':
         app.user = None
-        app.last_account = None
         return LOGIN_OR_SIGNUP_MESSAGE
     if commands[0] == 'STOP':
         raise StopError()
@@ -136,12 +132,28 @@ def populate_org(app, commands):
         return commands, None
     check_arguments_size(commands, 3)
     org_name = commands[1]
+    commands = [commands[2].upper()] + commands[3:]
+
+    if app.last_org and org_name in ['-last', app.last_org['name']]:
+        return commands, app.last_org
+    if org_name == '-last' and not app.last_org:
+        raise ValueError(NO_LAST_ORG_MESSAGE)
+
     org = check_org_exist(app.client, org_name, app.user)
     if not org:
-        raise ValueError(ORG_NOT_FOUND_MESSAGE.format(org_name, app.user['name']))
+        raise ValueError(ORG_NOT_FOUND_MESSAGE.format(org_name))
     org_pwd = getpass(ORG_PWD_MESSAGE)
-    commands = [commands[2].upper()] + commands[3:]
 
     if not check_password(org_pwd, org[0]['password']):
         raise QuitError(WRONG_ORG_PWD_MESSAGE)
+    app.last_org = org[0]
     return commands, org[0]
+
+
+def extract_account_name(app, command, owner_entity):
+    if command != '-last':
+        return command
+    if not (owner_entity.key in app.last_accounts):
+        raise ValueError(NO_LAST_ACCOUNT_MESSAGE.format(owner_entity['name']))
+    if command == '-last':
+        return app.last_accounts[owner_entity.key]['account_name']

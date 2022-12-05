@@ -1,14 +1,13 @@
 """
 Provides functionalities for modifying categories.
 """
-from google.cloud import datastore
 
 from src.common.category_consts import CATEGORY_NOT_FOUND_MESSAGE, DELETED_CATEGORY_MESSAGE, \
     REMOVE_CATEGORY_QUESTION_MESSAGE, CATEGORY_NOT_DELETED_MESSAGE
 from src.common.consts import ENTER_COMMAND_WITH_USER_MESSAGE
 from src.common.utils import visualize_accounts, visualize_categories
 from src.database.datastore_manager import retrieve_all_categories_by_user, check_category_exists
-from src.database.base import save_entity
+from src.database.base import save_entity, create_entity
 from .category_helpers import remove_all_accounts_from_category, remove_account_from_category, \
     drop_sensitive_info_from_category
 
@@ -18,7 +17,7 @@ def add_account_to_category(app, category_name, account_key, owner_entity):
     if not categories:
         category_info = {'category_name': category_name,
                          'owner': owner_entity.key, 'accounts': [account_key]}
-        category = datastore.Entity(app.client.key('Category'))
+        category = create_entity(app, 'Category')
     else:
         category = categories[0]
         category_info = dict(category)

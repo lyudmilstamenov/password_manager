@@ -1,6 +1,6 @@
 .PHONY: set-venv
 set-venv:
-	conda env remove -n pmenv && conda env create -f environment.yml
+	conda env remove -n pmenv && conda env create -f anaconda-project.yml
 
 
 .PHONY: run
@@ -27,3 +27,9 @@ test-coverage:
 .PHONY: utest
 utest:
 	conda activate pmenv && python -m unittest test_account_manager #coverage run -m unittest
+
+
+
+#.PHONY: set-path
+#set-path:
+#	conda activate pmenv && anaconda-project set-variable GOOGLE_APPLICATION_CREDENTIALS=$(VAR)

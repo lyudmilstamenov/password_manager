@@ -10,34 +10,41 @@ class TestAccountHelpers:
 
     def test_retrieve_account_by_account_name__without_last_account(self, mocker):
         app = App()
+        app.last_account = {}
+        owner = type('obj', (object,), {'key': 'value'})()
         mocker.patch('src.models.account_helpers.check_account_exists', return_value=[{'account_name': 'name'}])
-        assert retrieve_account_by_account_name(app, 'name', None) == {
+        assert retrieve_account_by_account_name(app, 'name', owner) == {
             'account_name': 'name'}
 
     def test_retrieve_account_by_account_name__with_last_account_with_different_name(self, mocker):
         app = App()
-        app.last_account = {'account_name': 'name1'}
+        owner = type('obj', (object,), {'key': 'value'})()
+        app.last_account ={1: {'account_name': 'name1'}}
         mocker.patch('src.models.account_helpers.check_account_exists', return_value=[{'account_name': 'name2'}])
-        assert retrieve_account_by_account_name(app, 'name2', None) == {
+        assert retrieve_account_by_account_name(app, 'name2', owner) == {
             'account_name': 'name2'}
 
     def test_retrieve_account_by_account_name(self, mocker):
         app = App()
-        app.last_account = {'account_name': 'name'}
+        app.last_account = {'1':{'account_name': 'name'}}
+        owner = type('obj', (object,), {'key': 'value'})()
         mocker.patch('src.models.account_helpers.check_account_exists')
-        assert retrieve_account_by_account_name(app, 'name', None) == {
+        assert retrieve_account_by_account_name(app, 'name', owner) == {
             'account_name': 'name'}
 
     def test_retrieve_account_by_account_name__throws_value_error(self, mocker):
         app = App()
+        owner = type('obj', (object,), {'key': 'value'})()
         mocker.patch('src.models.account_helpers.check_account_exists', return_value=None)
-        check_exception_message(lambda: retrieve_account_by_account_name(app, 'name', None), ValueError,
+        check_exception_message(lambda: retrieve_account_by_account_name(app, 'name', owner), ValueError,
                                 'Account with account name name was not found.')
 
     def test_retrieve_account_password(self, mocker):
+        owner = lambda: {'password': 'pwd1'};
+        owner.key = 'value'
         mocker.patch('src.models.account_helpers.retrieve_account_by_account_name', return_value={'password': 'pwd2'})
         mocker.patch('src.models.account_helpers.decrypt', return_value='decrypted')
-        assert retrieve_account_password(App(), '', {'password': 'pwd1'}) == 'decrypted'
+        assert retrieve_account_password(App(), '', owner) == 'decrypted'
 
     # def test_init_account_info(self, mocker):
     #     owner = type('obj', (object,), {'key': 'key_value'})

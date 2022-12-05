@@ -14,8 +14,9 @@ UPDATED_ACCOUNT_MESSAGE = 'Account with account name {} was successfully updated
 UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE = 'In order not to change ' \
                                          'the following property click "enter"'
 ACCOUNT_NOT_FOUND_MESSAGE = 'Account with account name {} was not found.'
+NOT_FOUND_ACCOUNTS_MESSAGE = 'No accounts were found.'
 ACCOUNT_EXISTS_MESSAGE = 'Account with account name {} already exists.'
-NO_LAST_ACCOUNT_MESSAGE = 'No account was used recently.'
+NO_LAST_ACCOUNT_MESSAGE = 'No account was used recently by {}.'
 
 COPIED_TO_CLIPBOARD_MESSAGE = 'The password was successfully copied to your clipboard.' \
                               + ENTER_COMMAND_WITH_USER_MESSAGE
@@ -25,7 +26,7 @@ INVALID_PASSWORD_MESSAGE = 'Invalid password. The password should contain ' \
                            '1 digits and 1 special characters. '
 URL_OPENED_MESSAGE = 'The login page was successfully opened.' + ENTER_COMMAND_WITH_USER_MESSAGE
 URL_NOT_VALID_MESSAGE = 'The login url is invalid.' + ENTER_COMMAND_WITH_USER_MESSAGE
-DELETE_PWD_MESSAGE='You cannot delete the password. You can only change it.'
+DELETE_PWD_MESSAGE = 'You cannot delete the password. You can only change it.'
 
 ACCOUNT_NAME_INPUT_MESSAGE = 'account name (This name must be unique per account.): '
 APP_NAME_INPUT_MESSAGE = 'app name []: '

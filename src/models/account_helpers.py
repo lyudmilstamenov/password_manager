@@ -46,13 +46,14 @@ def update_account_info(app, account, owner_entity):
 
 def retrieve_account_password(app, account_name, owner_entity):
     account = retrieve_account_by_account_name(app, account_name, owner_entity)
-    app.last_account = account
+    app.last_accounts[owner_entity.key] = account
     return decrypt(account['password'], owner_entity['password'])  # decrypt
 
 
 def retrieve_account_by_account_name(app, account_name, owner):
-    if app.last_account and account_name == app.last_account['account_name']:
-        return app.last_account
+    if owner.key in app.last_accounts and \
+            account_name == app.last_accounts[owner.key]['account_name']:
+        return app.last_accounts[owner.key]
     if not (accounts := check_account_exists(app.client, account_name, owner)):
         raise ValueError(ACCOUNT_NOT_FOUND_MESSAGE.format(account_name))
     return accounts[0]

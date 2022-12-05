@@ -34,32 +34,25 @@ class TestBaseCommands():
     #
 
     def test_generate_pwd(self):
-        app = App()
-        pwd = generate_pwd(app, [])
+        pwd = generate_pwd([])
         assert pwd is not None
         assert len(pwd) == 8
 
     def test_generate_pwd__with_len(self):
-        app = App()
-        pwd = generate_pwd(app, ['20'])
+        pwd = generate_pwd(['20'])
         assert pwd is not None
         assert len(pwd) == 20
 
     def test_generate_pwd__with_negative_len(self):
-        app = App()
-        with pytest.raises(ValueError) as exc:
-            generate_pwd(app, ['-2'])
-        assert INVALID_PWD_LEN_MESSAGE == str(exc.value)
+        check_exception_message(lambda: generate_pwd(['-2']), ValueError,
+                                INVALID_PWD_LEN_MESSAGE)
 
     def test_generate_pwd__with_invalid_len(self):
-        app = App()
-        with pytest.raises(ValueError) as exc:
-            generate_pwd(app, ['0'])
-            assert INVALID_PWD_LEN_MESSAGE == str(exc.value)
+        check_exception_message(lambda: generate_pwd(['0']), ValueError,
+                                INVALID_PWD_LEN_MESSAGE)
 
     def test_generate_pwd__with_invalid_len_str(self):
-        app = App()
-        check_exception_message(lambda: generate_pwd(app, ['not_digit']), ValueError,
+        check_exception_message(lambda: generate_pwd(['not_digit']), ValueError,
                                 INVALID_ARGUMENTS_MESSAGE)
 
     def test_help(self):

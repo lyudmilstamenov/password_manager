@@ -38,7 +38,7 @@ MODERATE_PASSWORD_MESSAGE = Fore.YELLOW + \
 STRONG_PASSWORD_MESSAGE = Fore.GREEN + \
                           'The password is strong. Security score: {}' + \
                           Fore.RESET
-BASE_ERROR_MESSAGE = '{}' + HELP_MESSAGE + ENTER_COMMAND_WITH_USER_MESSAGE
+BASE_ERROR_MESSAGE = HELP_MESSAGE + ENTER_COMMAND_WITH_USER_MESSAGE
 
 KIND_EXISTS_MESSAGE = '{} with the same {} already exists. '
 KIND_EXISTS_EXCEEDS_ENTRIES_MESSAGE = KIND_EXISTS_MESSAGE + EXCEED_RETRIES_MESSAGE
@@ -113,9 +113,11 @@ HELP_INFO_LIST = [
              'and for every account from the category the '
              'category property is set to empty.'},
     {'command': '"shortcut info"',
-     'info': 'If you use "-last" instead of <account_name> the programme will use '
-             'the most recently used account \n'
-             'if this is not the first operation with accounts for the session.\n'
+     'info': 'If you use "-last" instead of <account_name>/<org_name> the programme will use '
+             'the most recently used account/organization \n'
+             'if this is not the first operation with account/organization for the session.\n'
+             '"-last" for organization can be used only on account commands'
+             '(not when modifying the organization)\n'
              ' -o <org_name> allows the user to view, create,update and delete '
              'accounts and categories from an organization.'},
     {'command': 'org all',

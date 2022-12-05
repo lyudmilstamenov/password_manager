@@ -2,8 +2,8 @@
 Provides basic functions used in different modules.
 """
 import tabulate
-from .account_consts import ACCOUNTS_ORDER, ACCOUNT_PROPERTIES
-from .category_consts import CATEGORY_PROPERTIES, CATEGORIES_ORDER
+from .account_consts import ACCOUNTS_ORDER, ACCOUNT_PROPERTIES, NOT_FOUND_ACCOUNTS_MESSAGE
+from .category_consts import CATEGORY_PROPERTIES, CATEGORIES_ORDER, NOT_FOUND_CATEGORIES_MESSAGE
 from .consts import NOT_ENOUGH_ARGUMENTS_MESSAGE
 
 
@@ -15,7 +15,7 @@ def visualize_accounts(owner_name, accounts):
     :return:
     """
     if not accounts:
-        print('No accounts were found.')
+        print(NOT_FOUND_ACCOUNTS_MESSAGE)
         return
     order = ACCOUNTS_ORDER.copy()
     order.update(accounts[0])
@@ -44,7 +44,7 @@ def drop_sensitive_info(account, owner_name):
 
 def visualize_categories(categories):
     if not categories:
-        print('No categories were found.')
+        print(NOT_FOUND_CATEGORIES_MESSAGE)
         return
     order = CATEGORIES_ORDER.copy()
     print(order)

@@ -1,3 +1,5 @@
+import sys
+
 from google.cloud.datastore import Key
 
 from ..app import App
@@ -17,15 +19,10 @@ def run():
     while command != 'STOP':
         commands = extract_commands(input_message)
         try:
-            input_message = handle_commands(app, commands)
+            input_message = catch_base_errors(app, lambda: handle_commands(app, commands))
         except StopError:
             break
-        except ValueError as exc:
-            input_message = BASE_ERROR_MESSAGE.format(str(exc), app.user['name'] if app.user else '')
-            continue
-        except QuitError as exc:
-            input_message = QUIT_MESSAGE + BASE_ERROR_MESSAGE.format(str(exc), app.user['name'])
-    print(STOP_MESSAGE)
+    sys.stderr.write(STOP_MESSAGE)
 
 
 def handle_commands(app, commands):
@@ -43,6 +40,28 @@ def handle_commands(app, commands):
 
 
 def extract_commands(input_message):
+    """
+    Extracts the commands from the entered string.
+    :param input_message: str of commands
+    :return: list of commands
+    """
     input_string = input(input_message)
     input_list = input_string.split()
     return [cmd.upper() for cmd in input_list[0:2]] + input_list[2:]
+
+
+def catch_base_errors(app, function):
+    """
+    Processes the raised exceptions and returns input message.
+    :param app: App(contains the information about the current state of the programme)
+    :param function: handler to be executed
+    :return: message
+    """
+    try:
+        return function()
+    except ValueError as exc:
+        sys.stderr.write(str(exc))
+        return BASE_ERROR_MESSAGE.format(app.user['name'] if app.user else '')
+    except QuitError as exc:
+        sys.stderr.write(QUIT_MESSAGE + str(exc))
+        return BASE_ERROR_MESSAGE.format(app.user['name'])

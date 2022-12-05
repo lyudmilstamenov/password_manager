@@ -3,14 +3,13 @@ Provides method getpass which takes string from the input and hides the characte
 """
 import getpass
 import time
-from google.cloud import datastore
 
 from ..common.consts import LOGIN_OR_SIGNUP_MESSAGE, \
     USER_NOT_FOUND_MESSAGE, WAIT_MESSAGE, HELP_MESSAGE, \
     USER_EXISTS_MESSAGE, SUCCESSFUL_LOGIN_MESSAGE, SUCCESSFUL_SIGNUP_MESSAGE, \
     WRONG_PWD_MESSAGE
 from ..database.datastore_manager import check_user_exists
-from ..database.base import save_entity
+from ..database.base import save_entity, create_entity
 from ..security.validation import validate_email, validate_password, validate_entity_name
 from ..security.cryptography import get_hashed_password, check_password
 
@@ -30,7 +29,7 @@ def signup(app):
     user_info['password'] = get_hashed_password(user_info['password'])
     if check_user_exists(app.client, user_info['name']):
         raise ValueError(USER_EXISTS_MESSAGE.format(user_info["name"]))
-    user = datastore.Entity(app.client.key('User'))
+    user = create_entity(app, 'User')
     save_entity(app.client, user, user_info)
     return SUCCESSFUL_SIGNUP_MESSAGE
 

@@ -13,11 +13,8 @@ class TestConsole:
                                 EMPTY_COMMAND_MESSAGE)
 
     def test_handle_commands__with_wrong_command(self):
-        captured_output = StringIO()
-        sys.stdout = captured_output
-        assert handle_commands(App(), ['no_command']) == '$: '
-        sys.stdout = sys.__stdout__
-        assert captured_output.getvalue() == INVALID_COMMAND_MESSAGE + HELP_MESSAGE + '\n'
+        check_exception_message(lambda: handle_commands(App(), ['no_command']), ValueError,
+                                INVALID_COMMAND_MESSAGE)
 
     def test_handle_commands__with_login_command(self, mocker):
         mocker.patch('src.interpreters.console.login_or_signup', return_value='logged_in')

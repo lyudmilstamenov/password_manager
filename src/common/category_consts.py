@@ -15,3 +15,4 @@ CATEGORY_NOT_DELETED_MESSAGE = 'The category was not removed.' + ENTER_COMMAND_W
 CATEGORY_PROPERTIES = {'category_name': 'Category name',
                        'accounts': 'Accounts', 'owner': 'Owner name'}
 CATEGORIES_ORDER = OrderedDict([('category_name', ''), ('accounts', ''), ('owner', 'Owner name')])
+NOT_FOUND_CATEGORIES_MESSAGE='No categories were found.'
