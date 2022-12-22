@@ -1,6 +1,6 @@
 import pytest
 
-from helper import check_exception_message
+from test.helper import check_exception_message
 from src.app import App
 from src.models.account_helpers import retrieve_account_by_account_name, retrieve_account_password, \
     update_account_info, populate_account_info

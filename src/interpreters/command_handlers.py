@@ -7,7 +7,7 @@ from ..models.base_commands import visualize_help, clear, generate_pwd
 from ..models import user_manager
 from ..models.account_manager import add_account, edit_account, \
     delete_account, view_account, copy_password, \
-    visualize_password, open_url
+    visualize_password, open_url, url_fill_in
 from ..models.category_manager import delete_category, \
     view_all_accounts_by_category, view_all_categories
 from ..models.org_manager import create_organization, \
@@ -69,12 +69,14 @@ def handle_account_commands(commands, app):
 
 
 def handle_account_view_commands(commands, app, owner_entity):
-    account_name = extract_account_name(app, commands[1], owner_entity)
+    parameter = extract_account_name(app, commands[1], owner_entity)
     handlers = {
-        'VIEW': lambda: view_account(app, account_name, owner_entity),
-        'COPY-PWD': lambda: copy_password(app, account_name, owner_entity),
-        'PWD': lambda: visualize_password(app, account_name, owner_entity),
-        'URL': lambda: open_url(app, account_name, owner_entity),
+        'VIEW': lambda: view_account(app, parameter, owner_entity),
+        'COPY-PWD': lambda: copy_password(app, parameter, owner_entity),
+        'PWD': lambda: visualize_password(app, parameter, owner_entity),
+        'URL': lambda: open_url(app, parameter, owner_entity),
+        # 'URL-IN': lambda: url_fill_in(app, account_name, owner_entity),
+        'VIEW-BY-APP': lambda: view_account(app, '-all', owner_entity, filters={'app_name': parameter})
     }
     if commands[0] in handlers:
         return handlers[commands[0]]()

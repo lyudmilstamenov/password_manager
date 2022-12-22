@@ -1,7 +1,7 @@
 import sys
 from io import StringIO
 
-from helper import check_exception_message
+from test.helper import check_exception_message
 from src.app import App
 from src.common.consts import EMPTY_COMMAND_MESSAGE, INVALID_COMMAND_MESSAGE, HELP_MESSAGE
 from src.interpreters.console import handle_commands

@@ -66,12 +66,14 @@ dependencies:
   - pytest-mock
   - coverage
   - pyreadline3
+#  - selenium
   - pip
   - pip:
     - google-cloud-datastore
     - pyperclip
     - password-strength
     - random-password-generator
+#    - webdriver-manager
 
 #
 # In the channels section, list any Conda channel URLs to be searched

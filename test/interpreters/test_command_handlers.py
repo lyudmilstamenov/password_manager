@@ -1,6 +1,6 @@
-from app import App
-from common.consts import NOT_ENOUGH_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE, INVALID_ARGUMENTS_MESSAGE
-from helper import check_exception_message
+from src.app import App
+from src.common.consts import NOT_ENOUGH_ARGUMENTS_MESSAGE, INVALID_COMMAND_MESSAGE, INVALID_ARGUMENTS_MESSAGE
+from test.helper import check_exception_message
 from src.interpreters.command_handlers import handle_user_commands
 
 

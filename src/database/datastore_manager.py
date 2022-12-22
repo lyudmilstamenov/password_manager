@@ -38,14 +38,26 @@ def retrieve_all_categories_by_user(client, user):
     return create_query(client, 'Category', {'owner': user.key})
 
 
-def retrieve_all_accounts_by_user(client, owner):
+def retrieve_all_accounts_by_user(client, owner, filters):
     """
-    Retrieves all accounts by owner.
+    Retrieves all accounts by owner and filters the results using filters.
     :param client: the Google Datastore client
+    :param owner: a datastore key of a User or an Organization
+    :param filters: used to filter the list of accounts
+    :return: list of accounts which meet the conditions
+    """
+    return create_query(client, 'Account', {'owner': owner.key} | filters)
+
+
+def retrieve_all_accounts_by_user_and_app(client, app_name, owner):
+    """
+    Retrieves all accounts by owner and app name.
+    :param client: the Google Datastore client
+    :param app_name: the name of the app of the accounts
     :param owner: a datastore key of a User or an Organization
     :return: list of accounts which meet the conditions
     """
-    return create_query(client, 'Account', {'owner': owner.key})
+    return create_query(client, 'Account', {'owner': owner.key, 'app': app_name})
 
 
 def check_account_exists(client, account_name, owner):

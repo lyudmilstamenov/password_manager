@@ -14,11 +14,14 @@ INVALID_COMMAND_MESSAGE = 'The command is invalid. '
 HELP_MESSAGE = 'Please enter "help" in order to get information about the commands.'
 STOP_MESSAGE = 'The programme stops.'
 QUIT_MESSAGE = 'You are quiting the current state of the programme. '
+FORBIDDEN_OPERATION_MESSAGE = 'This operation is not allowed. '
 LOGIN_OR_SIGNUP_MESSAGE = 'Please log in [login] or sign up [signup]: '
 ENTER_COMMAND_WITH_USER_MESSAGE = '\n' + Fore.GREEN + '{}' + Fore.RESET + ' $ '
 SUCCESSFUL_LOGIN_MESSAGE = 'You have successfully logged in. \nHi {},' \
                            ' I am your password manager.' + ENTER_COMMAND_WITH_USER_MESSAGE
 SUCCESSFUL_SIGNUP_MESSAGE = 'You have successfully logged in. Please login into your account.\n$ '
+
+ALREADY_LOGGED_IN_ERROR_MESSAGE = 'You are already logged in.'
 
 WRONG_PWD_MESSAGE = 'Wrong password. You have {} more tries.'
 WAIT_MESSAGE = 'You have to wait 30 sec before continuing.'
@@ -88,13 +91,21 @@ HELP_INFO_LIST = [
     {'command': 'account [-o <org_name>] url <account_name>',
      'info': 'This command opens the login page of '
              'the account if the account has a valid url.'},
+    {'command': 'account [-o <org_name>] url-in <account_name>',
+     'info': 'This command opens the login page of '
+             'the account if the account has a valid url and populates the fields.'},
+    # TODO https://stackoverflow.com/questions/8560959/using-python-to-sign-into-website-fill-in-a-form-then-sign-out
     {'command': 'account [-o <org_name>] view -all',
      'info': 'This command shows the non-sensitive '
              'information of all accounts who are owned by the '
-             'current user.'},
+             'current owner(user/org).'},
     {'command': 'account [-o <org_name>] view <account_name>',
      'info': 'This command shows the non-sensitive '
              'information of the account.'},
+    {'command': 'account [-o <org_name>] view-by-app <app_name>',
+     'info': 'This command shows the non-sensitive '
+             'information of all accounts by app name who are owned by the'
+             'current owner(user/org).'},  # TODO
     {'command': 'account [-o <org_name>] copy-pwd <account_name>',
      'info': 'This command copies the password of '
              'the account to your clipboard.'},

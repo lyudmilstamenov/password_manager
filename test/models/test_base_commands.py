@@ -5,7 +5,7 @@ from unittest import mock
 import pytest
 
 import src.models
-from helper import check_exception_message
+from test.helper import check_exception_message
 from src.common.consts import INVALID_PWD_LEN_MESSAGE, INVALID_ARGUMENTS_MESSAGE
 from src.app import App
 from io import StringIO

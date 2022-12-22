@@ -1,10 +1,11 @@
-from app import App
-from models.account_manager import add_account
+from src.app import App
+from src.models.account_manager import add_account
 
 
 class TestAccountManager:
     def test_add_account(self, mocker):
-        mocker.patch('src.models.account_manager.init_account_info', return_value={'account_name': 'account 1'})
+        mocker.patch('src.models.account_manager.init_account_info', return_value=
+        {'account_name': 'account 1', 'category': 'cat1'})
         mocker.patch('src.models.account_manager.create_entity', return_value={})
         mocker.patch('src.models.account_manager.save_entity')
         mocker.patch('src.models.account_manager.add_account_to_category')
