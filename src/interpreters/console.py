@@ -1,7 +1,5 @@
 import sys
 
-from google.cloud.datastore import Key
-
 from ..app import App
 from ..common.erros import StopError, QuitError, ForbiddenOperationError
 
@@ -46,8 +44,6 @@ def catch_base_errors(f):
         except ForbiddenOperationError as exc:
             sys.stderr.write(FORBIDDEN_OPERATION_MESSAGE + str(exc))
             return BASE_ERROR_MESSAGE.format(args[0].user['name'])
-
-        print(f'{f} took {end - start:.2f} second')
 
     return inner
 

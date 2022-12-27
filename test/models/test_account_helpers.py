@@ -1,5 +1,3 @@
-import pytest
-
 from test.helper import check_exception_message
 from src.app import App
 from src.models.account_helpers import retrieve_account_by_account_name, retrieve_account_password, \
@@ -19,18 +17,28 @@ class TestAccountHelpers:
     def test_retrieve_account_by_account_name__with_last_account_with_different_name(self, mocker):
         app = App()
         owner = type('obj', (object,), {'key': 'value'})()
-        app.last_account ={1: {'account_name': 'name1'}}
+        app.last_account = {1: {'account_name': 'name1'}}
         mocker.patch('src.models.account_helpers.check_account_exists', return_value=[{'account_name': 'name2'}])
         assert retrieve_account_by_account_name(app, 'name2', owner) == {
             'account_name': 'name2'}
 
     def test_retrieve_account_by_account_name(self, mocker):
         app = App()
-        app.last_account = {'1':{'account_name': 'name'}}
-        owner = type('obj', (object,), {'key': 'value'})()
-        mocker.patch('src.models.account_helpers.check_account_exists')
+        app.last_accounts = {'owner_id': {'account_name': 'name'}}
+        owner = type('obj', (object,), {'key': 'owner_id'})()
+        mocker.patch('src.models.account_helpers.check_account_exists', return_value=[{}])
+        retrieve_account_by_account_name(app, 'name', owner)
         assert retrieve_account_by_account_name(app, 'name', owner) == {
             'account_name': 'name'}
+
+    def test_retrieve_account_by_account_name__without_last_account(self, mocker):
+        app = App()
+        app.last_accounts = {'owner_id': {'account_name': 'name'}}
+        owner = type('obj', (object,), {'key': 'owner_id_2'})()
+        mocker.patch('src.models.account_helpers.check_account_exists', return_value=[{'account_name': 'name2'}])
+        retrieve_account_by_account_name(app, 'name', owner)
+        assert retrieve_account_by_account_name(app, 'name', owner) == {
+            'account_name': 'name2'}
 
     def test_retrieve_account_by_account_name__throws_value_error(self, mocker):
         app = App()
