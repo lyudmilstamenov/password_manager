@@ -69,7 +69,6 @@ def check_org_exist(client, org_name, user):
     :param user: User entity(the current logged in user)
     :return: list of organizations which meet the conditions
     """
-    # TODO maybe change to User get by key and check orgs:org_name
     if orgs := check_owner_of_org(client, org_name, user):
         return orgs
     return check_member_of_org(client, org_name, user)
