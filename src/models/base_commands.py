@@ -11,6 +11,10 @@ from ..common.consts import HELP_TABLE_ORDER, HELP_TABLE_PROPERTIES, HELP_INFO_L
 
 
 def visualize_help():
+    """
+    Presents the help information to the user.
+    :return:
+    """
     help_info = HELP_INFO_LIST
     order = HELP_TABLE_ORDER.copy()
     order.update(help_info[0])
@@ -20,10 +24,19 @@ def visualize_help():
 
 
 def clear():
+    """
+    Clears the console.
+    :return:
+    """
     system('cls' if name == 'nt' else 'clear')
 
 
 def generate_pwd(commands):
+    """
+    Generates a strong password.
+    :param commands:
+    :return:
+    """
     try:
         length = 8 if not commands else int(commands[0])
     except Exception as exc:

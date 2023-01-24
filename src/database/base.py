@@ -31,4 +31,10 @@ def save_entity(client, entity, entity_info: dict):
 
 
 def create_entity(app, kind):
+    """
+    Creates a new entity in the datastore and returns it.
+    :param app:
+    :param kind:
+    :return:
+    """
     return datastore.Entity(app.client.key(kind))

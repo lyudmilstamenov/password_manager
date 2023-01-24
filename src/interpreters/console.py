@@ -5,7 +5,7 @@ from ..common.erros import StopError, QuitError, ForbiddenOperationError
 
 from ..common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, INVALID_COMMAND_MESSAGE, STOP_MESSAGE, \
     QUIT_MESSAGE, BASE_COMMANDS, BASE_ERROR_MESSAGE, EMPTY_COMMAND_MESSAGE, ALREADY_LOGGED_IN_ERROR_MESSAGE, \
-    FORBIDDEN_OPERATION_MESSAGE
+    FORBIDDEN_OPERATION_MESSAGE, UNKNOWN_ERROR_MESSAGE
 from .command_handlers import handle_base_commands, login_or_signup, handle_user_commands
 
 
@@ -21,20 +21,18 @@ def run():
             input_message = handle_commands(app, commands)
         except StopError:
             break
-    sys.stderr.write(STOP_MESSAGE)
 
 
-def catch_base_errors(f):
+def catch_base_errors(func):
     """
     Processes the raised exceptions and returns input message.
-    :param app: App(contains the information about the current state of the programme)
-    :param function: handler to be executed
+    :param func: handler to be executed
     :return: message
     """
 
     def inner(*args, **kwargs):
         try:
-            return f(*args, **kwargs)
+            return func(*args, **kwargs)
         except ValueError as exc:
             sys.stderr.write(str(exc))
             return BASE_ERROR_MESSAGE.format(args[0].user['name'] if args[0].user else '')
@@ -43,6 +41,13 @@ def catch_base_errors(f):
             return BASE_ERROR_MESSAGE.format(args[0].user['name'])
         except ForbiddenOperationError as exc:
             sys.stderr.write(FORBIDDEN_OPERATION_MESSAGE + str(exc))
+            return BASE_ERROR_MESSAGE.format(args[0].user['name'])
+        except StopError:
+            sys.stderr.write(STOP_MESSAGE)
+            raise
+        except Exception as exc:
+            sys.stderr.write(UNKNOWN_ERROR_MESSAGE)
+            print(exc)
             return BASE_ERROR_MESSAGE.format(args[0].user['name'])
 
     return inner

@@ -13,6 +13,14 @@ from .category_helpers import remove_all_accounts_from_category, remove_account_
 
 
 def add_account_to_category(app, category_name, account_key, owner_entity):
+    """
+    Adds an account to the Category entity of the category in the datastore.
+    :param app:
+    :param category_name:
+    :param account_key:
+    :param owner_entity:
+    :return:
+    """
     categories = check_category_exists(app.client, category_name, owner_entity)
     if not categories:
         category_info = {'category_name': category_name,
@@ -27,6 +35,13 @@ def add_account_to_category(app, category_name, account_key, owner_entity):
 
 
 def delete_category(app, category_name, owner_entity):
+    """
+    Deletes a category by name and owner.
+    :param app:
+    :param category_name:
+    :param owner_entity:
+    :return:
+    """
     categories = check_category_exists(app.client, category_name, owner_entity)
     if not categories:
         raise ValueError(CATEGORY_NOT_FOUND_MESSAGE.format(category_name))
@@ -41,6 +56,13 @@ def delete_category(app, category_name, owner_entity):
 
 
 def view_all_accounts_by_category(app, category_name, owner_entity):
+    """
+    Retrieves all accounts by category and owner.
+    :param app:
+    :param category_name:
+    :param owner_entity:
+    :return:
+    """
     categories = check_category_exists(app.client, category_name, owner_entity)
     if not categories:
         raise ValueError(f'Category with category name {category_name} was not found.')
@@ -54,6 +76,12 @@ def view_all_accounts_by_category(app, category_name, owner_entity):
 
 
 def view_all_categories(app, owner_entity):
+    """
+    Retrieves all categories by the current user/organization.
+    :param app:
+    :param owner_entity:
+    :return:
+    """
     categories = retrieve_all_categories_by_user(app.client, owner_entity)
     categories = [
         drop_sensitive_info_from_category(app, category, owner_entity)

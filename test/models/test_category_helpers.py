@@ -9,10 +9,3 @@ class TestCategoryHelpers:
         assert drop_sensitive_info_from_category(app, {'accounts': ['key1', 'key2', 'key3']},
                                                  {'name': 'owner_name'}) == {'accounts': ['name', 'name', 'name'],
                                                                              'owner': 'owner_name'}
-
-    # def test_remove_all_accounts_from_category(self, mocker):
-    #     pass
-    #
-    #
-    # def test_remove_account_from_category(self):
-    #     pass

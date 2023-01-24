@@ -36,6 +36,12 @@ def visualize_org(org):
 
 
 def drop_sensitive_info(account, owner_name):
+    """
+    Deletes the sensitive information of the account.
+    :param account:
+    :param owner_name:
+    :return:
+    """
     account['password'] = '*' * account['pwd_length']
     account['owner'] = owner_name
     del account['pwd_length']
@@ -43,6 +49,11 @@ def drop_sensitive_info(account, owner_name):
 
 
 def visualize_categories(categories):
+    """
+    Presents the information of the given categories.
+    :param categories:
+    :return:
+    """
     if not categories:
         print(NOT_FOUND_CATEGORIES_MESSAGE)
         return
@@ -55,11 +66,24 @@ def visualize_categories(categories):
 
 
 def check_arguments_size(commands, size=2):
+    """
+    Checks if enough arguments are given and raises an exception otherwise.
+    :param commands:
+    :param size:
+    :return:
+    """
     if len(commands) < size:
         raise ValueError(NOT_ENOUGH_ARGUMENTS_MESSAGE)
 
 
 def get_owner(app, org):
+    """
+    Returns the owner of the accounts.
+    By default if the user is logged in an organization, it uses the organization.
+    :param app:
+    :param org:
+    :return:
+    """
     if org:
         return org
     return app.user

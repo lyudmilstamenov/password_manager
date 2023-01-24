@@ -2,7 +2,6 @@
 App saves the current state of the programme
 """
 
-import os
 from google.cloud import datastore
 
 
@@ -14,11 +13,6 @@ class App:
 
     def __init__(self):
         self.__user = None
-        # dotenv.load_dotenv()  # exports contents of a `.env` file in the curr dir as environmental variables
-        # API_KEY = os.getenv("API_KEY")
-        # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] \
-        #     = "../credentials.json"
-        print(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
         self.__client = datastore.Client()
         self.__last_accounts = {}
         self.__last_org = None

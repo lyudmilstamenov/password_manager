@@ -15,6 +15,7 @@ HELP_MESSAGE = 'Please enter "help" in order to get information about the comman
 STOP_MESSAGE = 'The programme stops.'
 QUIT_MESSAGE = 'You are quiting the current state of the programme. '
 FORBIDDEN_OPERATION_MESSAGE = 'This operation is not allowed. '
+UNKNOWN_ERROR_MESSAGE = 'Unknown error. '
 LOGIN_OR_SIGNUP_MESSAGE = 'Please log in [login] or sign up [signup]: '
 ENTER_COMMAND_WITH_USER_MESSAGE = '\n' + Fore.GREEN + '{}' + Fore.RESET + ' $ '
 SUCCESSFUL_LOGIN_MESSAGE = 'You have successfully logged in. \nHi {},' \
@@ -91,10 +92,6 @@ HELP_INFO_LIST = [
     {'command': 'account [-o <org_name>] url <account_name>',
      'info': 'This command opens the login page of '
              'the account if the account has a valid url.'},
-    {'command': 'account [-o <org_name>] url-in <account_name>',
-     'info': 'This command opens the login page of '
-             'the account if the account has a valid url and populates the fields.'},
-    # TODO https://stackoverflow.com/questions/8560959/using-python-to-sign-into-website-fill-in-a-form-then-sign-out
     {'command': 'account [-o <org_name>] view -all',
      'info': 'This command shows the non-sensitive '
              'information of all accounts who are owned by the '
@@ -105,7 +102,7 @@ HELP_INFO_LIST = [
     {'command': 'account [-o <org_name>] view-by-app <app_name>',
      'info': 'This command shows the non-sensitive '
              'information of all accounts by app name who are owned by the'
-             'current owner(user/org).'},  # TODO
+             'current owner(user/org).'},
     {'command': 'account [-o <org_name>] copy-pwd <account_name>',
      'info': 'This command copies the password of '
              'the account to your clipboard.'},

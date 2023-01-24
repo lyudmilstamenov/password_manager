@@ -2,28 +2,41 @@
 Provides functionalities for modifying organizations.
 """
 
-from .org_helpers import init_org_info, drop_sensitive_info_from_org, \
-    remove_all_users_from_org, retrieve_org, \
-    delete_org_from_user
-from ..common.consts import USER_NOT_FOUND_MESSAGE, ENTER_COMMAND_WITH_USER_MESSAGE
-from ..common.erros import QuitError
-from ..common.org_consts import USERS_NOT_FOUND_MESSAGE, \
+from src.common.consts import USER_NOT_FOUND_MESSAGE, ENTER_COMMAND_WITH_USER_MESSAGE
+from src.common.erros import QuitError
+from src.common.org_consts import USERS_NOT_FOUND_MESSAGE, \
     SUCCESSFULLY_CREATED_ORG_MESSAGE, DELETED_ORG_MESSAGE, \
     ADDED_USER_TO_ORG_MESSAGE, REMOVED_USER_FROM_ORG_MESSAGE, REMOVE_YOURSELF_FROM_ORG_MESSAGE, \
     ORG_NOT_DELETED_MESSAGE, REMOVE_ORG_QUESTION_MESSAGE, \
     NO_ORGS_MESSAGE, ALL_ORGS_MESSAGE, ALREADY_MEMBER_MESSAGE
-from ..common.utils import visualize_org
-from ..database.base import save_entity, create_entity
-from ..database.datastore_manager import check_user_exists
+from src.common.utils import visualize_org
+from src.database.base import save_entity, create_entity
+from src.database.datastore_manager import check_user_exists
+from .org_helpers import init_org_info, drop_sensitive_info_from_org, \
+    remove_all_users_from_org, retrieve_org, \
+    delete_org_from_user
 
 
 def add_org_to_user(client, user, org):
+    """
+    Adds the organization key to the list of organization in the User entity.
+    :param client:
+    :param user:
+    :param org:
+    :return:
+    """
     user_info = dict(user)
     user_info['orgs'].append(org.key)
     save_entity(client, user, user_info)
 
 
 def create_organization(app, users):
+    """
+    Creates a new Organization entity with the given users as members.
+    :param app:
+    :param users:
+    :return:
+    """
     org_info, found_users, not_found_users = init_org_info(app, users)
     org = create_entity(app, 'Organization')
     save_entity(app.client, org, org_info)
@@ -38,6 +51,13 @@ def create_organization(app, users):
 
 
 def add_user_to_organization(app, org_name, username):
+    """
+    Adds the use to the Organization entity of the organization.
+    :param app:
+    :param org_name:
+    :param username:
+    :return:
+    """
     org = retrieve_org(app.client, app.user, org_name)
     org_info = dict(org)
     users = check_user_exists(app.client, username)
@@ -55,6 +75,11 @@ def add_user_to_organization(app, org_name, username):
 
 
 def view_all_orgs(app):
+    """
+    Retrieves the information about all organizations which the current user is a member of.
+    :param app:
+    :return:
+    """
     orgs = [app.client.get(org_key) for org_key in app.user['orgs']]
     if not orgs:
         return NO_ORGS_MESSAGE.format(app.user['name'])
@@ -64,6 +89,12 @@ def view_all_orgs(app):
 
 
 def view_org(app, org_name):
+    """
+    Retrieves the information about the company.
+    :param app:
+    :param org_name:
+    :return:
+    """
     org = retrieve_org(app.client, app.user, org_name)
     visualize_org(drop_sensitive_info_from_org(app, dict(org)))
     app.last_org = org
@@ -71,6 +102,13 @@ def view_org(app, org_name):
 
 
 def remove_user_from_organization(app, org_name, username):
+    """
+    Removes user from organization
+    :param app:
+    :param org_name:
+    :param username:
+    :return:
+    """
     if username == app.user['name']:
         raise QuitError(REMOVE_YOURSELF_FROM_ORG_MESSAGE)
 
@@ -88,6 +126,12 @@ def remove_user_from_organization(app, org_name, username):
 
 
 def delete_org(app, org_name):
+    """
+    Deletes organization by name.
+    :param app:
+    :param org_name:
+    :return:
+    """
     org = retrieve_org(app.client, app.user, org_name)
     if org['users']:
         answer = input(REMOVE_ORG_QUESTION_MESSAGE)

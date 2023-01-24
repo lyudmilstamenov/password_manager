@@ -16,6 +16,12 @@ from .category_manager import update_category
 
 
 def init_account_info(app, owner_entity):
+    """
+    Populates the account information taking the values from the input.
+    :param app:
+    :param owner_entity:
+    :return:
+    """
     account_info = populate_account_info(app, owner_entity)
     account_info['password'] = encrypt(account_info['password'], owner_entity['password'])
     account_info['owner'] = owner_entity.key
@@ -25,6 +31,13 @@ def init_account_info(app, owner_entity):
 
 
 def update_account_info(app, account, owner_entity):
+    """
+    Updates the information of the account taking the values from the input.
+    :param app:
+    :param account:
+    :param owner_entity:
+    :return:
+    """
     account_info = dict(account)
     new_account_info = populate_account_info(app, owner_entity, True)
     if new_account_info['password'] == '-del':
@@ -45,12 +58,26 @@ def update_account_info(app, account, owner_entity):
 
 
 def retrieve_account_password(app, account_name, owner_entity):
+    """
+    Retrieves only the password of the account.
+    :param app:
+    :param account_name:
+    :param owner_entity:
+    :return:
+    """
     account = retrieve_account_by_account_name(app, account_name, owner_entity)
     app.last_accounts[owner_entity.key] = account
     return decrypt(account['password'], owner_entity['password'])  # decrypt
 
 
 def retrieve_account_by_account_name(app, account_name, owner):
+    """
+    Retrieves the account by name and owner.
+    :param app:
+    :param account_name:
+    :param owner:
+    :return:
+    """
     if owner.key in app.last_accounts and \
             account_name == app.last_accounts[owner.key]['account_name']:
         return app.last_accounts[owner.key]
@@ -60,6 +87,13 @@ def retrieve_account_by_account_name(app, account_name, owner):
 
 
 def populate_account_info(app, owner_entity, can_be_empty=False):
+    """
+    Populates the information of the account taking the values from the input.
+    :param app:
+    :param owner_entity:
+    :param can_be_empty:
+    :return:
+    """
     account_info = {
         'account_name': validate_entity_name(app, input(ACCOUNT_NAME_INPUT_MESSAGE),
                                              entity_kind='Account', owner_entity=owner_entity,
