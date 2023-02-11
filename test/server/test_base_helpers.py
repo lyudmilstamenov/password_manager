@@ -1,37 +1,30 @@
 import sys
-import unittest
-from unittest import mock
+from io import StringIO
 
-import pytest
-
-import src.models
+from server.helpers import account_helpers
 from test.helper import check_exception_message
 from src.common.consts import INVALID_PWD_LEN_MESSAGE, INVALID_ARGUMENTS_MESSAGE
-from src.app import App
-from io import StringIO
-import sys
-import unittest
-from src.models.base_commands import generate_pwd, visualize_help
+from src.server.helpers.base_helpers import generate_pwd, visualize_help
 
 
-class TestBaseCommands():
-    # @patch('src.models.account_helpers.init_account_info')
-    # def test_add_account(self):
-    #     account_helpers.init_account_info = mock.Mock(return_value="mocked stuff")
-    #     # init_account_info.return_value = 'mocked stuff'
-    #     sys.stdout.write("world\nworld\nworld\nworld\nworld\nworld\nworld\nworld\nworld\n")
-    #     pytest_conf = Config.fromdictargs({}, ['--capture=no'])
-    #
-    # app = App()
-    # # mocker.patch('src.models.account_helpers.init_account_info', return_value={})
-    # # mocker.patch('app.client.key', return_value='')
-    # # mocker.patch('datastore.Entity', return_value='')
-    # # mocker.patch('populate_account_info')
-    # a = add_account(app, None)
-    # src.models.account_helpers.init_account_info.assert_called_once_with(app, None)
-    # assert a == ''
-    # # monkeypatch.setattr('builtins.input', lambda _: "Mark")
-    #
+class TestBaseCommands:
+    @patch('src.models.account_helpers.init_account_info')
+    def test_add_account(self):
+        account_helpers.init_account_info = mock.Mock(return_value="mocked stuff")
+        # init_account_info.return_value = 'mocked stuff'
+        sys.stdout.write("world\nworld\nworld\nworld\nworld\nworld\nworld\nworld\nworld\n")
+        pytest_conf = Config.fromdictargs({}, ['--capture=no'])
+
+    app = App()
+    # mocker.patch('src.models.account_helpers.init_account_info', return_value={})
+    # mocker.patch('app.client.key', return_value='')
+    # mocker.patch('datastore.Entity', return_value='')
+    # mocker.patch('populate_account_info')
+    a = add_account(app, None)
+    src.models.account_helpers.init_account_info.assert_called_once_with(app, None)
+    assert a == ''
+    # monkeypatch.setattr('builtins.input', lambda _: "Mark")
+
 
     def test_generate_pwd(self):
         pwd = generate_pwd([])

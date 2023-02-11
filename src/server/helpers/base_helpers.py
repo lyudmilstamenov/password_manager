@@ -6,7 +6,7 @@ from password_generator import PasswordGenerator
 
 import tabulate
 
-from ..common.consts import HELP_TABLE_ORDER, HELP_TABLE_PROPERTIES, HELP_INFO_LIST, \
+from common.consts import HELP_TABLE_ORDER, HELP_TABLE_PROPERTIES, HELP_INFO_LIST, \
     INVALID_ARGUMENTS_MESSAGE, INVALID_PWD_LEN_MESSAGE, TOO_LARGE_PWD_LEN_MESSAGE
 
 

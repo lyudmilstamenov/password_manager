@@ -14,7 +14,7 @@ from src.common.account_consts import SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE, \
     UPDATE_ACCOUNT_ADDITIONAL_INFO_MESSAGE, \
     URL_OPENED_MESSAGE, URL_NOT_VALID_MESSAGE
 
-from .account_helpers import update_account_info, init_account_info, retrieve_account_password, \
+from models.helpers.account_helpers import update_account_info, init_account_info, retrieve_account_password, \
     retrieve_account_by_account_name
 from .category_manager import add_account_to_category
 

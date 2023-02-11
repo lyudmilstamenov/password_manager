@@ -1,5 +1,5 @@
 from src.app import App
-from src.models.category_helpers import drop_sensitive_info_from_category
+from models.helpers.category_helpers import drop_sensitive_info_from_category
 
 
 class TestCategoryHelpers:

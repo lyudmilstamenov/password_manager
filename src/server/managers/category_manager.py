@@ -8,7 +8,7 @@ from src.common.consts import ENTER_COMMAND_WITH_USER_MESSAGE
 from src.common.utils import visualize_accounts, visualize_categories
 from src.database.datastore_manager import retrieve_all_categories_by_user, check_category_exists
 from src.database.base import save_entity, create_entity
-from .category_helpers import remove_all_accounts_from_category, remove_account_from_category, \
+from models.helpers.category_helpers import remove_all_accounts_from_category, remove_account_from_category, \
     drop_sensitive_info_from_category
 
 

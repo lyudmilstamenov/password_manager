@@ -12,7 +12,7 @@ from src.database.datastore_manager import check_account_exists
 from src.security.cryptography import encrypt, decrypt
 from src.security.validation import validate_string_property, validate_email, \
     validate_url, validate_password, validate_entity_name
-from .category_manager import update_category
+from models.managers.category_manager import update_category
 
 
 def init_account_info(app, owner_entity):
