@@ -1,5 +1,5 @@
-from src.app import App
-from src.common.consts import HELP_MESSAGE, FORBIDDEN_OPERATION_MESSAGE, ALREADY_LOGGED_IN_ERROR_MESSAGE, \
+from src.models.app import App
+from src.common.consts import FORBIDDEN_OPERATION_MESSAGE, ALREADY_LOGGED_IN_ERROR_MESSAGE, \
     EMPTY_COMMAND_MESSAGE, INVALID_COMMAND_MESSAGE, BASE_ERROR_MESSAGE
 from src.interpreters.console import handle_commands
 

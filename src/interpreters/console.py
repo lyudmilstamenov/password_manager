@@ -1,4 +1,4 @@
-from ..app import App
+from ..models.app import App
 from ..common.error_handlers import catch_stop_errors, catch_base_errors
 from ..common.erros import ForbiddenOperationError
 from ..common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, INVALID_COMMAND_MESSAGE, \

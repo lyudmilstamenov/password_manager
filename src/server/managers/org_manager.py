@@ -12,7 +12,7 @@ from src.common.org_consts import USERS_NOT_FOUND_MESSAGE, \
 from src.common.utils import visualize_org
 from src.database.base import save_entity, create_entity
 from src.database.datastore_manager import check_user_exists
-from models.helpers.org_helpers import init_org_info, drop_sensitive_info_from_org, \
+from ..helpers.org_helpers import init_org_info, drop_sensitive_info_from_org, \
     remove_all_users_from_org, retrieve_org, \
     delete_org_from_user
 

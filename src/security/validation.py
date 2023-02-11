@@ -3,10 +3,10 @@ import re
 from password_strength import PasswordStats, PasswordPolicy
 from validators import url as url_validator, email as email_validator
 
-from ..database.datastore_manager import check_user_exists, check_account_exists, check_org_exist
-from ..common.account_consts import INVALID_PASSWORD_MESSAGE
-from ..common.erros import QuitError, StopError
-from ..common.consts import STRING_PROPERTY_VALIDATION_ERROR_MESSAGE, EMAIL_VALIDATION_ERROR_MESSAGE, \
+from src.database.datastore_manager import check_user_exists, check_account_exists, check_org_exist
+from src.common.account_consts import INVALID_PASSWORD_MESSAGE
+from src.common.erros import QuitError, StopError
+from src.common.consts import STRING_PROPERTY_VALIDATION_ERROR_MESSAGE, EMAIL_VALIDATION_ERROR_MESSAGE, \
     URL_VALIDATION_ERROR_MESSAGE, EXCEED_RETRIES_MESSAGE, WEAK_PASSWORD_MESSAGE, \
     MODERATE_PASSWORD_MESSAGE, STRONG_PASSWORD_MESSAGE, KIND_EXISTS_EXCEEDS_ENTRIES_MESSAGE, KIND_EXISTS_MESSAGE, \
     CHANGE_PASSWORD_MESSAGE

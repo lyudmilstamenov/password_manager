@@ -3,14 +3,14 @@ from getpass import getpass
 from ..common.org_consts import ORG_NOT_FOUND_MESSAGE, WRONG_ORG_PWD_MESSAGE, ORG_PWD_MESSAGE, NO_LAST_ORG_MESSAGE
 from ..database.datastore_manager import check_org_exist
 from ..security.cryptography import check_password
-from ..models.base_commands import visualize_help, clear, generate_pwd
-from ..models import user_manager
-from ..models.account_manager import add_account, edit_account, \
+from ..server.helpers.base_helpers import visualize_help, clear, generate_pwd
+from ..server.managers import user_manager
+from ..server.managers.account_manager import add_account, edit_account, \
     delete_account, view_account, copy_password, \
     visualize_password, open_url
-from ..models.category_manager import delete_category, \
+from ..server.managers.category_manager import delete_category, \
     view_all_accounts_by_category, view_all_categories
-from ..models.org_manager import create_organization, \
+from ..server.managers.org_manager import create_organization, \
     add_user_to_organization, remove_user_from_organization, delete_org, \
     view_org, view_all_orgs
 from ..common.erros import StopError, QuitError
@@ -156,5 +156,4 @@ def extract_account_name(app, command, owner_entity):
         return command
     if not (owner_entity.key in app.last_accounts):
         raise ValueError(NO_LAST_ACCOUNT_MESSAGE.format(owner_entity['name']))
-    if command == '-last':
-        return app.last_accounts[owner_entity.key]['account_name']
+    return app.last_accounts[owner_entity.key]['account_name']

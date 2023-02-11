@@ -6,10 +6,6 @@ set-venv:
 run:
 	conda activate pmenv && python -m src.main
 
-.PHONY: run-v
-run-v:
-	conda activate pmenv && python src/cryptography.py
-
 .PHONY: lint
 lint:
 	conda activate pmenv && pylint src/

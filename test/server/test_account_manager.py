@@ -1,33 +1,34 @@
 import pyperclip
 
+from helper_classes import Account, Owner
 from src.common.account_consts import SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE, UPDATED_ACCOUNT_MESSAGE, SHOW_PWD_MESSAGE, \
     DELETED_ACCOUNT_MESSAGE, COPIED_TO_CLIPBOARD_MESSAGE
 
-from src.app import App
-from models.managers.account_manager import add_account, edit_account, delete_account, visualize_password, copy_password
+from src.models.app import App
+from src.server.managers.account_manager import add_account, edit_account, delete_account, visualize_password, copy_password
 
 
 class TestAccountManager:
     def test_add_account(self, mocker):
-        account = type('obj', (object,), {'key': 'value'})()
+        account = Account()
         owner = type('obj', (object,), {'key': 'owner_val'})()
-        mocker.patch('src.models.account_manager.init_account_info', return_value=
+        mocker.patch('src.server.managers.account_manager.init_account_info', return_value=
         {'account_name': 'account 1', 'category': 'cat1'})
-        mocker.patch('src.models.account_manager.create_entity', return_value=account)
-        mocker.patch('src.models.account_manager.save_entity')
-        mocker.patch('src.models.account_manager.add_account_to_category')
+        mocker.patch('src.server.managers.account_manager.create_entity', return_value=account)
+        mocker.patch('src.server.managers.account_manager.save_entity')
+        mocker.patch('src.server.managers.account_manager.add_account_to_category')
 
         app = App()
         app.user = {'name': 'user 1'}
         assert add_account(app, owner) == SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE.format('account 1', app.user['name'])
 
     def test_edit_account(self, mocker):
-        owner = type('obj', (object,), {'key': 'owner_val'})()
-        mocker.patch('src.models.account_manager.retrieve_account_by_account_name', return_value=
+        owner = Owner()
+        mocker.patch('src.server.managers.account_manager.retrieve_account_by_account_name', return_value=
         {'account_name': 'account 1', 'category': 'cat1'})
-        mocker.patch('src.models.account_manager.update_account_info', return_value={'account_name': 'account 1'})
-        mocker.patch('src.models.account_manager.save_entity')
-        mocker.patch('src.models.account_manager.add_account_to_category')
+        mocker.patch('src.server.managers.account_manager.update_account_info', return_value={'account_name': 'account 1'})
+        mocker.patch('src.server.managers.account_manager.save_entity')
+        mocker.patch('src.server.managers.account_manager.add_account_to_category')
 
         app = App()
         app.user = {'name': 'user 1'}
@@ -35,9 +36,9 @@ class TestAccountManager:
                                                                                        app.user['name'])
 
     def test_delete_account(self, mocker):
-        account = type('obj', (object,), {'key': 'account_val'})()
-        owner = type('obj', (object,), {'key': 'owner_val'})()
-        mocker.patch('src.models.account_manager.retrieve_account_by_account_name', return_value=account)
+        account = Account()
+        owner = Owner()
+        mocker.patch('src.server.managers.account_manager.retrieve_account_by_account_name', return_value=account)
 
         app = App()
         app.last_accounts = {'owner_val': {'name': 'acc1'}}
@@ -48,7 +49,7 @@ class TestAccountManager:
 
 
     def test_visualize_password(self, mocker):
-        mocker.patch('src.models.account_manager.retrieve_account_password', return_value='password')
+        mocker.patch('src.server.managers.account_manager.retrieve_account_password', return_value='password')
 
         app = App()
         app.user = {'name': 'user 1'}
@@ -56,7 +57,7 @@ class TestAccountManager:
                                                                                      app.user['name'])
 
     def test_copy_password(self, mocker):
-        mocker.patch('src.models.account_manager.retrieve_account_password', return_value='password')
+        mocker.patch('src.server.managers.account_manager.retrieve_account_password', return_value='password')
 
         app = App()
         app.user = {'name': 'user 1'}

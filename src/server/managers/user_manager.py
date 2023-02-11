@@ -4,14 +4,14 @@ Provides method getpass which takes string from the input and hides the characte
 import getpass
 import time
 
-from common.consts import LOGIN_OR_SIGNUP_MESSAGE, \
+from src.common.consts import LOGIN_OR_SIGNUP_MESSAGE, \
     USER_NOT_FOUND_MESSAGE, WAIT_MESSAGE, HELP_MESSAGE, \
     USER_EXISTS_MESSAGE, SUCCESSFUL_LOGIN_MESSAGE, SUCCESSFUL_SIGNUP_MESSAGE, \
     WRONG_PWD_MESSAGE
-from database.datastore_manager import check_user_exists
-from database.base import save_entity, create_entity
-from security.validation import validate_email, validate_password, validate_entity_name
-from security.cryptography import get_hashed_password, check_password
+from src.database.datastore_manager import check_user_exists
+from src.database.base import save_entity, create_entity
+from src.security.validation import validate_email, validate_password, validate_entity_name
+from src.security.cryptography import get_hashed_password, check_password
 
 
 def signup(app):
