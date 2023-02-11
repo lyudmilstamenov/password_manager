@@ -61,7 +61,8 @@ def delete_account(app, account_name, owner_entity):
     """
     account = retrieve_account_by_account_name(app, account_name, owner_entity)
     app.client.delete(account.key)
-    del app.last_accounts[owner_entity.key]
+    if owner_entity.key in app.last_accounts:
+        del app.last_accounts[owner_entity.key]
     return DELETED_ACCOUNT_MESSAGE.format(account['account_name'], app.user['name'])
 
 

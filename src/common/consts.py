@@ -13,6 +13,8 @@ INVALID_ARGUMENTS_MESSAGE = 'The command arguments are invalid.'
 INVALID_COMMAND_MESSAGE = 'The command is invalid. '
 HELP_MESSAGE = 'Please enter "help" in order to get information about the commands.'
 STOP_MESSAGE = 'The programme stops.'
+GOOGLE_CREDENTIALS_MESSAGE = 'The file with your google credentials was not found. ' \
+                             'Check whether the path in anaconda-project.yml is correct. '
 QUIT_MESSAGE = 'You are quiting the current state of the programme. '
 FORBIDDEN_OPERATION_MESSAGE = 'This operation is not allowed. '
 UNKNOWN_ERROR_MESSAGE = 'Unknown error. '
