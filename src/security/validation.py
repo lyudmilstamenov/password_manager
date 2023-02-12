@@ -15,9 +15,9 @@ from src.common.consts import STRING_PROPERTY_VALIDATION_ERROR_MESSAGE, EMAIL_VA
 def validate_property(property_value, property_name, error_message, error_handler, can_be_empty, counter=0):
     if counter >= 5:
         raise QuitError(EXCEED_RETRIES_MESSAGE)
-    if property_value.upper == 'EXIT':
+    if property_value.upper() == 'EXIT':
         raise QuitError()
-    if property_value.upper == 'STOP':
+    if property_value.upper() == 'STOP':
         raise StopError()
     if (can_be_empty and not property_value) or error_handler(property_value):
         return property_value

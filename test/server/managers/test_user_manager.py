@@ -5,20 +5,21 @@ from src.models.app import App
 from src.server.managers.user_manager import signup, login
 
 
-class TestUserManager:
+def mock_input(prompt):
+    if prompt == 'username: ':
+        return 'test_user'
+    if prompt == 'email: ':
+        return 'test_user@example.com'
+    return 'test_password'
 
-    def mock_input(self, prompt):
-        if prompt == 'username: ':
-            return 'test_user'
-        if prompt == 'email: ':
-            return 'test_user@example.com'
-        return 'test_password'
+
+class TestUserManager:
 
     def test_signup(self, mocker):
         app = App()
 
-        mocker.patch('src.server.managers.user_manager.input', side_effect=self.mock_input)
-        mocker.patch('src.server.managers.user_manager.getpass.getpass', lambda: 'test_password12$')
+        mocker.patch('src.server.managers.user_manager.input', side_effect=mock_input)
+        mocker.patch('src.server.managers.user_manager.getpass.getpass', lambda msg: 'test_password12$')
         mocker.patch('src.server.managers.user_manager.check_user_exists', return_value=[])
         mocker.patch('src.server.managers.user_manager.validate_entity_name', return_value='test_user')
         mocker.patch('src.server.managers.user_manager.validate_email', return_value='test_user@example.com')
@@ -32,8 +33,8 @@ class TestUserManager:
     def test_signup__with_existing_username(self, mocker):
         app = App()
 
-        mocker.patch('src.server.managers.user_manager.input', side_effect=self.mock_input)
-        mocker.patch('src.server.managers.user_manager.getpass.getpass', lambda: 'test_password12$')
+        mocker.patch('src.server.managers.user_manager.input', side_effect=mock_input)
+        mocker.patch('src.server.managers.user_manager.getpass.getpass', lambda msg: 'test_password12$')
         mocker.patch('src.server.managers.user_manager.check_user_exists', return_value=[{'name': 'test_user'}])
         mocker.patch('src.server.managers.user_manager.validate_entity_name', return_value='test_user')
         mocker.patch('src.server.managers.user_manager.validate_email', return_value='test_user@example.com')
@@ -54,6 +55,6 @@ class TestUserManager:
         mocker.patch('src.server.managers.user_manager.check_password', return_value=True)
         mocker.patch('src.server.managers.user_manager.check_user_exists', return_value=[User()])
         mocker.patch('src.server.managers.user_manager.input', side_effect=mock_input)
-        mocker.patch('src.server.managers.user_manager.getpass.getpass', lambda: 'test_password')
+        mocker.patch('src.server.managers.user_manager.getpass.getpass', lambda msg: 'test_password')
         result = login(app)
         assert result == SUCCESSFUL_LOGIN_MESSAGE.format('test_user', 'test_user')

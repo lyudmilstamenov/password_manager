@@ -29,7 +29,8 @@ def add_account(app, owner_entity):
     account_info = init_account_info(app, owner_entity)
     account = create_entity(app, 'Account')
     save_entity(app.client, account, account_info)
-    add_account_to_category(app, account_info['category'], account.key, owner_entity)
+    if account_info['category']:
+        add_account_to_category(app, account_info['category'], account.key, owner_entity)
     app.last_accounts[owner_entity.key] = account
     return SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE \
         .format(account_info['account_name'], app.user['name'])

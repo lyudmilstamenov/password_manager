@@ -25,10 +25,10 @@ def catch_base_errors(func):
             return BASE_ERROR_MESSAGE.format(args[0].user['name'] if args[0].user else '')
         except QuitError as exc:
             sys.stderr.write(QUIT_MESSAGE + str(exc))
-            return BASE_ERROR_MESSAGE.format(args[0].user['name'])
+            return BASE_ERROR_MESSAGE.format(args[0].user['name'] if args[0].user else '')
         except ForbiddenOperationError as exc:
             sys.stderr.write(FORBIDDEN_OPERATION_MESSAGE + str(exc))
-            return BASE_ERROR_MESSAGE.format(args[0].user['name'])
+            return BASE_ERROR_MESSAGE.format(args[0].user['name'] if args[0].user else '')
 
     return inner
 

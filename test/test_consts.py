@@ -66,7 +66,7 @@ HELPER_EXPECTED_MESSAGE = ('Commands                                         Inf
                            '                                                 '
                            'Please enter "clear" after '
                            'that in order the password to be removed from the console.\n'
-                           'account [-o <org_name>] cat <org_name>           '
+                           'account [-o <org_name>] cat <category_name>      '
                            'This command shows the '
                            'non-sensitive information of all accounts\n'
                            '                                                 '

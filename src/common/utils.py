@@ -1,10 +1,42 @@
 """
 Provides basic functions used in different modules.
 """
+import textwrap
+
 import tabulate
 from .account_consts import ACCOUNTS_ORDER, ACCOUNT_PROPERTIES, NOT_FOUND_ACCOUNTS_MESSAGE
 from .category_consts import CATEGORY_PROPERTIES, CATEGORIES_ORDER, NOT_FOUND_CATEGORIES_MESSAGE
 from .consts import NOT_ENOUGH_ARGUMENTS_MESSAGE
+
+
+def wrap_cell(cell_type, cell_value):
+    """
+    Restricts the length of the cell based on its type.
+    :param cell_type:
+    :param cell_value:
+    :return:
+    """
+    if cell_type in ['login_url', 'notes', 'accounts']:
+        width = 50
+    else:
+        width = 20
+    return "\n".join(textwrap.wrap(cell_value, width))
+
+
+def print_table(columns, rows):
+    """
+    Prints the table in the terminal using tabulate and
+    restricts the length of the fields.
+    :param columns:
+    :param rows:
+    :return:
+    """
+    wrapped_table = [
+        {cell_type: wrap_cell(cell_type, str(cell_value))
+         for cell_type, cell_value in row.items()}
+        for row in rows
+    ]
+    print(tabulate.tabulate(wrapped_table, columns))
 
 
 def visualize_accounts(owner_name, accounts):
@@ -21,7 +53,7 @@ def visualize_accounts(owner_name, accounts):
     order.update(accounts[0])
     accounts[0] = order
     rows = [drop_sensitive_info(dict(account), owner_name) for account in accounts]
-    print(tabulate.tabulate(rows, ACCOUNT_PROPERTIES))
+    print_table(ACCOUNT_PROPERTIES, rows)
 
 
 def visualize_org(org):
@@ -62,7 +94,7 @@ def visualize_categories(categories):
     order.update(categories[0])
     categories[0] = order
     rows = [dict(category) for category in categories]
-    print(tabulate.tabulate(rows, CATEGORY_PROPERTIES))
+    print_table(CATEGORY_PROPERTIES, rows)
 
 
 def check_arguments_size(commands, size=2):

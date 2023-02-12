@@ -22,7 +22,7 @@ LOGIN_OR_SIGNUP_MESSAGE = 'Please log in [login] or sign up [signup]: '
 ENTER_COMMAND_WITH_USER_MESSAGE = '\n' + Fore.GREEN + '{}' + Fore.RESET + ' $ '
 SUCCESSFUL_LOGIN_MESSAGE = 'You have successfully logged in. \nHi {},' \
                            ' I am your password manager.' + ENTER_COMMAND_WITH_USER_MESSAGE
-SUCCESSFUL_SIGNUP_MESSAGE = 'You have successfully logged in. Please login into your account.\n$ '
+SUCCESSFUL_SIGNUP_MESSAGE = 'You have successfully signed up. Please login into your account.\n$ '
 
 ALREADY_LOGGED_IN_ERROR_MESSAGE = 'You are already logged in.'
 
@@ -111,7 +111,7 @@ HELP_INFO_LIST = [
     {'command': 'account [-o <org_name>] pwd <account_name>',
      'info': 'This command shows the password of '
              'the account on the console.\n' + CLEAR_MESSAGE},
-    {'command': 'account [-o <org_name>] cat <org_name>',
+    {'command': 'account [-o <org_name>] cat <category_name>',
      'info': 'This command shows the non-sensitive '
              'information of all accounts \nwho are owned '
              'by the current user and are from this category.'},

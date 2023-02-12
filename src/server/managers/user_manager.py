@@ -24,7 +24,7 @@ def signup(app):
     username = validate_entity_name(app, input('username: '), entity_kind='User')
     user_info = {'name': username,
                  'email': validate_email(input('email: ')),
-                 'password': validate_password(getpass.getpass()),
+                 'password': validate_password(getpass.getpass('password: ')),
                  'orgs': []}
     user_info['password'] = get_hashed_password(user_info['password'])
     if check_user_exists(app.client, user_info['name']):
@@ -47,7 +47,7 @@ def login(app):
         raise ValueError(USER_NOT_FOUND_MESSAGE.format(username))
     user = users[0]
     for i in range(3):
-        password = getpass.getpass()
+        password = getpass.getpass('password: ')
         if check_password(password, user['password']):
             app.user = user
             app.user['password'] = password

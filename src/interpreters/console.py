@@ -28,7 +28,7 @@ def handle_commands(app, commands):
         return handle_base_commands(app, commands)
     if not app.user:
         return login_or_signup(commands, app)
-    if commands[0] == 'LOGIN':
+    if commands[0] in ['LOGIN', 'SIGNUP']:
         raise ForbiddenOperationError(ALREADY_LOGGED_IN_ERROR_MESSAGE)
     return handle_user_commands(commands, app)
 
