@@ -1,4 +1,4 @@
-from helper import check_exception_message
+from test.helper import check_exception_message
 from src.common.consts import SUCCESSFUL_SIGNUP_MESSAGE, SUCCESSFUL_LOGIN_MESSAGE, USER_EXISTS_MESSAGE
 from test.helper_classes import User
 from src.models.app import App

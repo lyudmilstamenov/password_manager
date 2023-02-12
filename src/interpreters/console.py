@@ -9,7 +9,6 @@ from src.interpreters.command_handlers import handle_base_commands, login_or_sig
 @catch_stop_errors
 def run():
     app = App()
-    app.user = app.client.get(app.client.key('User', 5644004762845184))
     print(HELP_MESSAGE)
     input_message = LOGIN_OR_SIGNUP_MESSAGE
     command = None
