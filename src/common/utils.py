@@ -90,7 +90,6 @@ def visualize_categories(categories):
         print(NOT_FOUND_CATEGORIES_MESSAGE)
         return
     order = CATEGORIES_ORDER.copy()
-    print(order)
     order.update(categories[0])
     categories[0] = order
     rows = [dict(category) for category in categories]
