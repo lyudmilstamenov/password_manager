@@ -16,10 +16,10 @@ def wrap_cell(cell_type, cell_value):
     :param cell_value:
     :return:
     """
-    if cell_type in ['login_url', 'notes', 'accounts']:
+    if cell_type in ['login_url', 'accounts']:
         width = 50
     else:
-        width = 20
+        width = 15
     return "\n".join(textwrap.wrap(cell_value, width))
 
 

@@ -55,7 +55,7 @@ def validate_password(password, skip_validation=False, can_be_empty=False):
         numbers=1,  # need min. 2 digits
         special=1,  # need min. 2 special characters
     )
-    if (not skip_validation) and policy.test(password):
+    if (not password.strip()) or ((not skip_validation) and policy.test(password)):
         print(INVALID_PASSWORD_MESSAGE)
         password = getpass.getpass('password: ')
         return validate_password(password, skip_validation)
@@ -80,7 +80,7 @@ def populate_fields(app, entity_kind, owner_entity=None):
         return 'User', 'username', lambda value: check_user_exists(app.client, value)
     if entity_kind == 'Organization':
         return 'Organization', 'organization name', \
-               lambda value: check_org_exist(app.client, value, app.user)
+               lambda value: check_org_exist(app.client, value)
     return 'Account', 'account name', \
            lambda value: check_account_exists(app.client, value, owner_entity)
 

@@ -23,4 +23,5 @@ ALL_ORGS_MESSAGE = 'You are a member of these organizations: '
 NO_ORGS_MESSAGE = 'You are not a member of any organizations.' + ENTER_COMMAND_WITH_USER_MESSAGE
 NOT_OWNER_OF_ORG_MESSAGE = 'You are not owner of an organization with the same name.'
 ALREADY_MEMBER_MESSAGE = '{} is already a member of the organization.'
+NOT_MEMBER_MESSAGE = '{} is not member of the organization.'
 NO_LAST_ORG_MESSAGE = 'No organization was used recently.'

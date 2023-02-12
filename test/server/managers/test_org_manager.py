@@ -21,6 +21,7 @@ class TestOrgManager:
         mocker.patch('src.server.managers.org_manager.create_entity', return_value=org)
         mocker.patch('src.server.managers.org_manager.save_entity')
         mocker.patch('src.server.managers.org_manager.add_org_to_user')
+        mocker.patch('src.server.managers.org_manager.check_user_exists', return_value=[{'name': 'user'}])
 
         app = App()
         app.user = {'name': 'user 1'}

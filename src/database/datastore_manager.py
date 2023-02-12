@@ -60,7 +60,7 @@ def check_account_exists(client, account_name, owner):
     return create_query(client, 'Account', {'owner': owner.key, 'account_name': account_name})
 
 
-def check_org_exist(client, org_name, user):
+def check_org_exist(client, org_name):
     """
     Retrieves all organizations with org_name as a name and
     the user is the owner of the organization or the user is a member.
@@ -69,9 +69,7 @@ def check_org_exist(client, org_name, user):
     :param user: User entity(the current logged in user)
     :return: list of organizations which meet the conditions
     """
-    if orgs := check_owner_of_org(client, org_name, user):
-        return orgs
-    return check_member_of_org(client, org_name, user)
+    return create_query(client, 'Organization', {'name': org_name})
 
 
 def check_member_of_org(client, org_name, user):

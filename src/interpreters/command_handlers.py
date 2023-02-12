@@ -140,7 +140,7 @@ def populate_org(app, commands):
     if org_name == '-last' and not app.last_org:
         raise ValueError(NO_LAST_ORG_MESSAGE)
 
-    org = check_org_exist(app.client, org_name, app.user)
+    org = check_org_exist(app.client, org_name)
     if not org:
         raise ValueError(ORG_NOT_FOUND_MESSAGE.format(org_name))
     org_pwd = getpass(ORG_PWD_MESSAGE)

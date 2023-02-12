@@ -1,14 +1,13 @@
 """
 Provides functionalities for modifying organizations.
 """
-
 from src.common.consts import USER_NOT_FOUND_MESSAGE, ENTER_COMMAND_WITH_USER_MESSAGE
 from src.common.erros import QuitError
 from src.common.org_consts import USERS_NOT_FOUND_MESSAGE, \
     SUCCESSFULLY_CREATED_ORG_MESSAGE, DELETED_ORG_MESSAGE, \
     ADDED_USER_TO_ORG_MESSAGE, REMOVED_USER_FROM_ORG_MESSAGE, REMOVE_YOURSELF_FROM_ORG_MESSAGE, \
     ORG_NOT_DELETED_MESSAGE, REMOVE_ORG_QUESTION_MESSAGE, \
-    NO_ORGS_MESSAGE, ALL_ORGS_MESSAGE, ALREADY_MEMBER_MESSAGE
+    NO_ORGS_MESSAGE, ALL_ORGS_MESSAGE, ALREADY_MEMBER_MESSAGE, NOT_MEMBER_MESSAGE
 from src.common.utils import visualize_org
 from src.database.base import save_entity, create_entity
 from src.database.datastore_manager import check_user_exists
@@ -42,7 +41,9 @@ def create_organization(app, users):
     save_entity(app.client, org, org_info)
     for user in found_users:
         add_org_to_user(app.client, user, org)
-    add_org_to_user(app.client, app.user, org)
+    owners = check_user_exists(app.client, app.user['name'])
+    if owners:
+        add_org_to_user(app.client, owners[0], org)
     if not_found_users:
         return USERS_NOT_FOUND_MESSAGE.format(', '.join(not_found_users)) \
                + SUCCESSFULLY_CREATED_ORG_MESSAGE.format(org_info['name'], app.user['name'])
@@ -61,7 +62,6 @@ def add_user_to_organization(app, org_name, username):
     org = retrieve_org(app.client, app.user, org_name)
     org_info = dict(org)
     users = check_user_exists(app.client, username)
-
     if not users:
         raise ValueError(USER_NOT_FOUND_MESSAGE.format(username))
     if org['owner'] == users[0].key or users[0].key in org['users']:
@@ -118,6 +118,8 @@ def remove_user_from_organization(app, org_name, username):
 
     if not users:
         raise ValueError(USER_NOT_FOUND_MESSAGE.format(username))
+    if users[0].key not in org_info['users']:
+        raise QuitError(NOT_MEMBER_MESSAGE.format(users[0]['name']))
     org_info['users'].remove(users[0].key)
     delete_org_from_user(app.client, org, users[0])
     save_entity(app.client, org, org_info)
