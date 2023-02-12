@@ -1,8 +1,8 @@
 import pyperclip
 
-from common.consts import USER_NOT_FOUND_MESSAGE
-from helper import check_exception_message
-from helper_classes import Owner, Account, User, Organization
+from src.common.consts import USER_NOT_FOUND_MESSAGE
+from test.helper import check_exception_message
+from test.helper_classes import Owner, Account, User, Organization
 from src.common.org_consts import SUCCESSFULLY_CREATED_ORG_MESSAGE, ADDED_USER_TO_ORG_MESSAGE
 from src.common.account_consts import SHOW_PWD_MESSAGE, \
     DELETED_ACCOUNT_MESSAGE, COPIED_TO_CLIPBOARD_MESSAGE
@@ -17,6 +17,7 @@ class TestOrgManager:
     def test_create_organization(self, mocker):
         org = Organization()
         owner = Owner()
+        mocker.patch('src.server.managers.org_manager.init_org_info', return_value=({'name': 'org 1'}, [], []))
         mocker.patch('src.server.managers.org_manager.create_entity', return_value=org)
         mocker.patch('src.server.managers.org_manager.save_entity')
         mocker.patch('src.server.managers.org_manager.add_org_to_user')

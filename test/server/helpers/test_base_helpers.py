@@ -6,7 +6,7 @@ from unittest.mock import patch
 from test.helper import check_exception_message
 from src.common.consts import INVALID_PWD_LEN_MESSAGE, INVALID_ARGUMENTS_MESSAGE
 from src.server.helpers.base_helpers import generate_pwd, visualize_help
-from test_consts import HELPER_EXPECTED_MESSAGE
+from test.test_consts import HELPER_EXPECTED_MESSAGE
 
 
 class TestBaseHelpers:

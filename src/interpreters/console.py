@@ -1,9 +1,9 @@
-from ..models.app import App
-from ..common.error_handlers import catch_stop_errors, catch_base_errors
-from ..common.erros import ForbiddenOperationError
-from ..common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, INVALID_COMMAND_MESSAGE, \
+from src.models.app import App
+from src.common.error_handlers import catch_stop_errors, catch_base_errors
+from src.common.erros import ForbiddenOperationError
+from src.common.consts import COMMANDS, HELP_MESSAGE, LOGIN_OR_SIGNUP_MESSAGE, INVALID_COMMAND_MESSAGE, \
     BASE_COMMANDS, EMPTY_COMMAND_MESSAGE, ALREADY_LOGGED_IN_ERROR_MESSAGE
-from .command_handlers import handle_base_commands, login_or_signup, handle_user_commands
+from src.interpreters.command_handlers import handle_base_commands, login_or_signup, handle_user_commands
 
 
 @catch_stop_errors

@@ -8,7 +8,7 @@ run:
 
 .PHONY: lint
 lint:
-	conda activate pmenv && pylint src/
+	conda activate pmenv && pylint src/ test/
 
 .PHONY: test
 test:

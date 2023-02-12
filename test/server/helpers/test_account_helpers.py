@@ -1,4 +1,4 @@
-from helper_classes import Owner
+from test.helper_classes import Owner
 from test.helper import check_exception_message
 from src.models.app import App
 from src.server.helpers.account_helpers import retrieve_account_by_account_name, retrieve_account_password, \

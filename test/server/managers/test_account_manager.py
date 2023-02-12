@@ -1,6 +1,6 @@
 import pyperclip
 
-from helper_classes import Account, Owner
+from test.helper_classes import Account, Owner
 from src.common.account_consts import SUCCESSFULLY_CREATED_ACCOUNT_MESSAGE, UPDATED_ACCOUNT_MESSAGE, SHOW_PWD_MESSAGE, \
     DELETED_ACCOUNT_MESSAGE, COPIED_TO_CLIPBOARD_MESSAGE
 
