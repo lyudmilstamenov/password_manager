@@ -1,8 +1,7 @@
 """
 App saves the current state of the programme
 """
-
-from google.cloud import datastore
+from src.database.datastore_client import DatastoreClient
 
 
 class App:
@@ -13,7 +12,7 @@ class App:
 
     def __init__(self):
         self.__user = None
-        self.__client = datastore.Client()
+        self.__client = DatastoreClient()
         self.__last_accounts = {}
         self.__last_org = None
 

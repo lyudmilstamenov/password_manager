@@ -48,9 +48,7 @@ def drop_sensitive_info_from_org(app, org_info):
     :param org_info:
     :return:
     """
-    usernames = []
-    for user_key in org_info['users']:
-        usernames.append(app.client.get(user_key)['name'])
+    usernames = [app.client.get(user_key)['name'] for user_key in org_info['users']]
     org_info['users'] = usernames
     org_info['owner'] = app.client.get(org_info['owner'])['name']
     return org_info
